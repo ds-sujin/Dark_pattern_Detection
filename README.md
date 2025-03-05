@@ -1,5 +1,5 @@
-<div align= "center">
-    <img src="https://capsule-render.vercel.app/api?type=waving&height=200&color=black&text=D.P_Detection" />
+<div align="center">
+    <img src="https://capsule-render.vercel.app/api?type=waving&height=200&color=black&text=D.P_Detection&fontColor=white" />
   
 # Literature Review
 
@@ -7,6 +7,6 @@
 
 # Neuro-Symbolic AI
 
-
-<div align= "center">
-    <img src="https://capsule-render.vercel.app/api?type=waving&height=100&color=black&section=footer" />
+<div align="center">
+    <img src="https://capsule-render.vercel.app/api?type=waving&height=100&color=black&section=footer&fontColor=white" />
+</div>
