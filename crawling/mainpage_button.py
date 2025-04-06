@@ -78,7 +78,7 @@ except:
 # -----------------------------------
 all_buttons = main_button_texts + popup_button_texts
 btn_df = pd.DataFrame(all_buttons)
-btn_df.to_csv("button_texts.csv", index=False, encoding='utf-8-sig')
+btn_df.to_csv("main_button_texts.csv", index=False, encoding='utf-8-sig')
 print("✅ 통합 버튼 텍스트 저장 완료: button_texts.csv")
 
 # -----------------------------------
