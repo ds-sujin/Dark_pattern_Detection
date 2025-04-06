@@ -1,2 +1,8 @@
-﻿url,CS_button_sentiment_score,CS_loss_word_flag,RM_signup_clicks,RM_cancel_clicks,RM_settings_depth,FA_required_consent_count,FA_optout_available,PR_checkbox_default,PR_option_text_readability,DA_button_visual_consistency,DA_text_similarity_score,FM_warning_message_count,FM_threatening_language_flag,FM_session_exists
-https://www.food-ology.co.kr/,,0,,,,,,,,,,,,
+﻿url,source,CS_button_sentiment_score,CS_loss_word_flag,RM_signup_clicks,RM_cancel_clicks,RM_settings_depth,FA_required_consent_count,FA_optout_available,PR_checkbox_default,PR_option_text_readability,DA_button_visual_consistency,DA_text_similarity_score,FM_warning_message_count,FM_threatening_language_flag,FM_session_exists
+https://www.food-ology.co.kr/product/detail.html?product_no=991,product991,,0,,,,,,,,,,,,
+https://www.food-ology.co.kr/product/detail.html?product_no=1302,product1302,,0,,,,,,,,,,,,
+https://www.food-ology.co.kr/product/detail.html?product_no=233,product233,,0,,,,,,,,,,,,
+https://www.food-ology.co.kr/product/detail.html?product_no=221,product221,,0,,,,,,,,,,,,
+https://www.food-ology.co.kr/product/detail.html?product_no=1303,product1303,,0,,,,,,,,,,,,
+https://www.food-ology.co.kr/product/detail.html?product_no=1286,product1286,,0,,,,,,,,,,,,
+https://www.food-ology.co.kr/,main,,0,,,,,,,,,,,,
