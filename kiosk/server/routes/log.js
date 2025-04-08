@@ -4,11 +4,12 @@ const ClickLog = require('../models/ClickLog');
 
 // POST /log
 router.post('/', async (req, res) => {
-  const { button, timestamp } = req.body;
+  const { button, username, timestamp } = req.body;
 
   try {
     const log = new ClickLog({
       button,
+      username,
       timestamp: timestamp ? new Date(timestamp) : undefined
     });
     await log.save();
