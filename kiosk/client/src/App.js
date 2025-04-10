@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import StartPage from './pages/StartPage';
 import MenuListPage from './pages/MenuListPage';
-import SetPage from './pages/SetPage';
+import CompletePage from './pages/CompletePage';
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<StartPage />} />
         <Route path="/menu" element={<MenuListPage />} />
-        <Route path="/set" element={<SetPage />} />
+        <Route path="/complete" element={<CompletePage />} />
       </Routes>
     </BrowserRouter>
   );

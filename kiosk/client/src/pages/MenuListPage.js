@@ -124,9 +124,9 @@ function MenuListPage() {
           </button>
         </div>
       </div>
-
+      
       {/* ✅ 팝업 조건부 렌더링 */}
-      {showSetPopup && (
+       {showSetPopup && (
         <SetPage
           onClose={() => setShowSetPage(false)}
           onConfirm={() => {
@@ -135,6 +135,7 @@ function MenuListPage() {
           }}
         />
       )}
+
     </div>
   );
 }
