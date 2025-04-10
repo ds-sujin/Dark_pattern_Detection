@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { logClick } from '../api'; 
+import { logClick } from '../api';
+import SetPage from './SetPage'; // ✅ SetPage를 팝업 컴포넌트로 import
 
 const menuData = [
   { name: '된장찌개', price: 8000, image: '/menu1.jpg' },
@@ -9,7 +10,7 @@ const menuData = [
   { name: '라볶이', price: 8000, image: '/menu4.jpg', soldOut: true },
   { name: '광운 김밥', price: 3000, image: '/menu5.jpg' },
   { name: '돈까스', price: 10000, image: '/menu6.jpg' },
-  { name: '닭볶음탕', price: 12000, image: '/menu7.jpg', soldOut: true  },
+  { name: '닭볶음탕', price: 12000, image: '/menu7.jpg', soldOut: true },
   { name: '공기밥 추가', price: 1000, image: '/menu8.jpg' },
 ];
 
@@ -17,6 +18,7 @@ function MenuListPage() {
   const navigate = useNavigate();
   const [selected, setSelected] = useState([]);
   const [timeLeft, setTimeLeft] = useState(600); // 10분
+  const [showSetPopup, setShowSetPage] = useState(false); // ✅ 팝업 표시 여부 상태
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -39,7 +41,7 @@ function MenuListPage() {
   };
 
   const handleSelect = async (item) => {
-    await logClick(item.name); 
+    await logClick(item.name);
 
     setSelected((prev) => {
       const exists = prev.find((m) => m.name === item.name);
@@ -56,7 +58,7 @@ function MenuListPage() {
   const total = selected.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="relative flex flex-col h-screen"> {/* ✅ relative 추가! */}
       {/* 상단 고정 영역 */}
       <div className="p-4 shrink-0 bg-gray-100">
         <div className="flex justify-center items-center mb-2">
@@ -81,7 +83,9 @@ function MenuListPage() {
           {menuData.map((item, index) => (
             <div
               key={index}
-              className={`border rounded-lg p-2 text-center ${item.soldOut ? 'opacity-40' : 'cursor-pointer hover:shadow-md'}`}
+              className={`border rounded-lg p-2 text-center ${
+                item.soldOut ? 'opacity-40' : 'cursor-pointer hover:shadow-md'
+              }`}
               onClick={() => !item.soldOut && handleSelect(item)}
             >
               <img src={item.image} alt={item.name} className="w-full h-24 object-cover rounded" />
@@ -101,7 +105,9 @@ function MenuListPage() {
             <div key={i} className="flex justify-between items-center mb-1">
               <span>{item.name}</span>
               <div className="flex items-center gap-2">
-                <span className="text-red-600 font-bold">{item.quantity} × {item.price.toLocaleString()}원</span>
+                <span className="text-red-600 font-bold">
+                  {item.quantity} × {item.price.toLocaleString()}원
+                </span>
               </div>
             </div>
           ))}
@@ -109,11 +115,27 @@ function MenuListPage() {
         <div className="text-right">
           <p className="font-semibold mb-2">총 결제금액</p>
           <p className="text-xl font-bold">{total.toLocaleString()}원</p>
-          <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 mt-2 rounded disabled:opacity-50" disabled={total === 0}>
+          <button
+            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 mt-2 rounded disabled:opacity-50"
+            disabled={total === 0}
+            onClick={() => setShowSetPage(true)} // ✅ 팝업 열기
+          >
             결제
           </button>
         </div>
       </div>
+      
+      {/* ✅ 팝업 조건부 렌더링 */}
+       {showSetPopup && (
+        <SetPage
+          onClose={() => setShowSetPage(false)}
+          onConfirm={() => {
+            setShowSetPage(false);
+            navigate('/complete'); // TODO: 주문 완료 페이지
+          }}
+        />
+      )}
+
     </div>
   );
 }
