@@ -19,7 +19,7 @@ const menuData = [
 function MenuListPage() {
   const navigate = useNavigate();
   const [selected, setSelected] = useState([]);
-  const [timeLeft, setTimeLeft] = useState(3); // 3분
+  const [timeLeft, setTimeLeft] = useState(180); // 3분
   const [showTimeoutPopup, setShowTimeoutPopup] = useState(false); // 시간 초과 팝업업
   const [showSetPopup, setShowSetPage] = useState(false); // ✅ 팝업 표시 여부 상태
   useEffect(() => {
