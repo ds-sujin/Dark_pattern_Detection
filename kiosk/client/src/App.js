@@ -4,6 +4,7 @@ import StartPage from './pages/StartPage';
 import MenuListPage from './pages/MenuListPage';
 import CompletePage from './pages/CompletePage';
 
+
 function App() {
   return (
     <BrowserRouter>
@@ -11,6 +12,7 @@ function App() {
         <Route path="/" element={<StartPage />} />
         <Route path="/menu" element={<MenuListPage />} />
         <Route path="/complete" element={<CompletePage />} />
+        
       </Routes>
     </BrowserRouter>
   );
