@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { logClick } from '../api';
 import SetPage from './SetPage'; // ✅ SetPage를 팝업 컴포넌트로 import
+import TimerPage from './TimerPage';
+
 
 const menuData = [
   { name: '된장찌개', price: 8000, image: '/menu1.jpg' },
@@ -17,15 +19,18 @@ const menuData = [
 function MenuListPage() {
   const navigate = useNavigate();
   const [selected, setSelected] = useState([]);
-  const [timeLeft, setTimeLeft] = useState(600); // 10분
+  const [timeLeft, setTimeLeft] = useState(180); // 3분
+  const [showTimeoutPopup, setShowTimeoutPopup] = useState(false); // 시간 초과 팝업업
   const [showSetPopup, setShowSetPage] = useState(false); // ✅ 팝업 표시 여부 상태
-
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(interval);
-          navigate('/');
+          setShowTimeoutPopup(true);
+          setTimeout(() => {
+            navigate('/'); // 메인으로 이동
+          }, 3000); // 3초 후
           return 0;
         }
         return prev - 1;
@@ -135,6 +140,8 @@ function MenuListPage() {
           }}
         />
       )}
+      {/* 시간 초과 팝업*/}
+      {showTimeoutPopup && <TimerPage />}
 
     </div>
   );
