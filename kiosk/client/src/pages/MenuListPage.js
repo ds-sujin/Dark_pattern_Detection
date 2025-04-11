@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { logClick } from '../api';
 import SetPage from './SetPage'; // ✅ SetPage를 팝업 컴포넌트로 import
 import TimerPage from './TimerPage';
+import TimerDP from '../components/TimerDP'; // 가이드 컴포넌트 import
 
 
 const menuData = [
@@ -20,24 +21,30 @@ function MenuListPage() {
   const navigate = useNavigate();
   const [selected, setSelected] = useState([]);
   const [timeLeft, setTimeLeft] = useState(180); // 3분
-  const [showTimeoutPopup, setShowTimeoutPopup] = useState(false); // 시간 초과 팝업업
+  const [showTimeoutPopup, setShowTimeoutPopup] = useState(false); // 시간 초과 팝업
+  const scenario = sessionStorage.getItem('scenario');
+  const [showGuide2, setShowGuide2] = useState(scenario === '2');
   const [showSetPopup, setShowSetPage] = useState(false); // ✅ 팝업 표시 여부 상태
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          setShowTimeoutPopup(true);
-          setTimeout(() => {
-            navigate('/'); // 메인으로 이동
-          }, 3000); // 3초 후
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [navigate]);
+    if (!showGuide2) {
+      const interval = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            setShowTimeoutPopup(true);
+            setTimeout(() => {
+              navigate('/');
+            }, 3000);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [navigate, showGuide2]);
+  
 
   const formatTime = (sec) => {
     const min = String(Math.floor(sec / 60)).padStart(2, '0');
@@ -142,6 +149,9 @@ function MenuListPage() {
       )}
       {/* 시간 초과 팝업*/}
       {showTimeoutPopup && <TimerPage />}
+
+      {/* 타이머 가이드 표시 */}
+      {showGuide2 && <TimerDP onNext={() => setShowGuide2(false)} />}
 
     </div>
   );
