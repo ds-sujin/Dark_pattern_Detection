@@ -18,7 +18,7 @@ const TimerDP = ({ onNext }) => {
         </p>
         {/* ✅ 두더지 이미지 */}
         <div className="flex justify-center">
-          <img src="/DPlogo.jpg" alt="다크패턴 마스코트" className="w-24 h-24 object-contain" />
+          <img src="/DPlogo.png" alt="다크패턴 마스코트" className="w-24 h-24 object-contain" />
         </div>
       </div>
     </div>

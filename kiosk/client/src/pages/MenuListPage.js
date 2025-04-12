@@ -1,11 +1,13 @@
-import React, { useState, useEffect} from 'react';
+// src/pages/MenuListPage.js
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { logClick } from '../api';
-import SetPage from './SetPage'; // ✅ SetPage를 팝업 컴포넌트로 import
+import SetPage from './SetPage';
 import TimerPage from './TimerPage';
-import TimerDP from '../components/TimerDP'; // 가이드 컴포넌트 import
+import TimerDP from '../components/TimerDP';
+import ButtonDP from '../components/ButtonDP';
 
-
+// 메뉴 데이터 (더미)
 const menuData = [
   { name: '된장찌개', price: 8000, image: '/menu1.jpg' },
   { name: '순두부찌개', price: 9000, image: '/menu2.jpg' },
@@ -19,13 +21,16 @@ const menuData = [
 
 function MenuListPage() {
   const navigate = useNavigate();
-  const [selected, setSelected] = useState([]);
-  const [timeLeft, setTimeLeft] = useState(180); // 3분
-  const [showTimeoutPopup, setShowTimeoutPopup] = useState(false); // 시간 초과 팝업
   const scenario = sessionStorage.getItem('scenario');
-  const [showGuide2, setShowGuide2] = useState(scenario === '2');
-  const [showSetPopup, setShowSetPage] = useState(false); // ✅ 팝업 표시 여부 상태
 
+  const [selected, setSelected] = useState([]);
+  const [timeLeft, setTimeLeft] = useState(180);
+  const [showTimeoutPopup, setShowTimeoutPopup] = useState(false);
+  const [showGuide2, setShowGuide2] = useState(scenario === '2');
+  const [showSetPopup, setShowSetPage] = useState(false);
+  const [showButtonDP, setShowButtonDP] = useState(false);
+
+  // 타이머
   useEffect(() => {
     if (!showGuide2) {
       const interval = setInterval(() => {
@@ -33,9 +38,7 @@ function MenuListPage() {
           if (prev <= 1) {
             clearInterval(interval);
             setShowTimeoutPopup(true);
-            setTimeout(() => {
-              navigate('/');
-            }, 3000);
+            setTimeout(() => navigate('/'), 3000);
             return 0;
           }
           return prev - 1;
@@ -44,7 +47,6 @@ function MenuListPage() {
       return () => clearInterval(interval);
     }
   }, [navigate, showGuide2]);
-  
 
   const formatTime = (sec) => {
     const min = String(Math.floor(sec / 60)).padStart(2, '0');
@@ -54,7 +56,6 @@ function MenuListPage() {
 
   const handleSelect = async (item) => {
     await logClick(item.name);
-
     setSelected((prev) => {
       const exists = prev.find((m) => m.name === item.name);
       if (exists) {
@@ -67,17 +68,37 @@ function MenuListPage() {
     });
   };
 
+  const handlePaymentClick = () => {
+    setShowSetPage(true);
+
+    if (scenario === '1') {
+      setShowButtonDP(true);
+      setTimeout(() => {
+        setShowButtonDP(false);
+      }, 5000);
+    }
+  };
+
   const total = selected.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
-    <div className="relative flex flex-col h-screen"> {/* ✅ relative 추가! */}
-      {/* 상단 고정 영역 */}
+    <div className="relative flex flex-col h-screen">
+      {/* ✅ 버튼 가이드 - 상단 중앙 고정 */}
+      {showButtonDP && (
+        <div className="absolute top-20 left-1/2 transform -translate-x-1/2 z-[999] pointer-events-none">
+          <ButtonDP />
+        </div>
+      )}
+
+      {/* 상단 타이머 영역 */}
       <div className="p-4 shrink-0 bg-gray-100">
         <div className="flex justify-center items-center mb-2">
           <span className="font-semibold">남은 시간</span>
           <span className="ml-2 text-red-600 font-bold">⏱ {formatTime(timeLeft)}</span>
         </div>
-        <p className="text-center text-gray-600 text-sm">빠르게 주문하세요! 시간이 지나면 주문이 초기화됩니다.</p>
+        <p className="text-center text-gray-600 text-sm">
+          빠르게 주문하세요! 시간이 지나면 주문이 초기화됩니다.
+        </p>
       </div>
 
       {/* 메뉴 탭 */}
@@ -89,7 +110,7 @@ function MenuListPage() {
         </div>
       </div>
 
-      {/* 메뉴 스크롤 영역 */}
+      {/* 메뉴 리스트 */}
       <div className="flex-1 overflow-y-scroll px-4 py-4">
         <div className="grid grid-cols-3 gap-4">
           {menuData.map((item, index) => (
@@ -100,16 +121,22 @@ function MenuListPage() {
               }`}
               onClick={() => !item.soldOut && handleSelect(item)}
             >
-              <img src={item.image} alt={item.name} className="w-full h-24 object-cover rounded" />
+              <img
+                src={item.image}
+                alt={item.name}
+                className="w-full h-24 object-cover rounded"
+              />
               <p className="mt-2">{item.name}</p>
               <p className="font-bold">{item.price.toLocaleString()}원</p>
-              {item.soldOut && <div className="text-white bg-black text-sm mt-1">품절</div>}
+              {item.soldOut && (
+                <div className="text-white bg-black text-sm mt-1">품절</div>
+              )}
             </div>
           ))}
         </div>
       </div>
 
-      {/* 하단 고정 영역 */}
+      {/* 결제 영역 */}
       <div className="bg-white border-t p-4 grid grid-cols-2 shrink-0">
         <div>
           <p className="font-semibold mb-2">담은 메뉴</p>
@@ -130,29 +157,27 @@ function MenuListPage() {
           <button
             className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 mt-2 rounded disabled:opacity-50"
             disabled={total === 0}
-            onClick={() => setShowSetPage(true)} // ✅ 팝업 열기
+            onClick={handlePaymentClick}
           >
             결제
           </button>
         </div>
       </div>
-      
-      {/* ✅ 팝업 조건부 렌더링 */}
-       {showSetPopup && (
+
+      {/* 세트 제안 팝업 */}
+      {showSetPopup && (
         <SetPage
           onClose={() => setShowSetPage(false)}
           onConfirm={() => {
             setShowSetPage(false);
-            navigate('/complete'); // TODO: 주문 완료 페이지
+            navigate('/complete');
           }}
         />
       )}
-      {/* 시간 초과 팝업*/}
+
+      {/* 타이머/가이드 팝업들 */}
       {showTimeoutPopup && <TimerPage />}
-
-      {/* 타이머 가이드 표시 */}
       {showGuide2 && <TimerDP onNext={() => setShowGuide2(false)} />}
-
     </div>
   );
 }
