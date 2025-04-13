@@ -2,7 +2,7 @@ import React from 'react';
 
 const SetPage = ({ onClose, onConfirm }) => {
   return (
-    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center z-50 bg-white bg-opacity-0 backdrop-blur-sm">
+    <div className="absolute top-0 left-0 w-full h-[200vh] flex items-center justify-center z-50 bg-black bg-opacity-70 backdrop-blur-sm">
       <div className="bg-white rounded-xl py-10 px-5 text-center max-w-sm w-full shadow-2xl">
         <h2 className="text-2xl font-bold mb-2 text-red-600">1,900원만 추가하면</h2>
         <p className="font-semibold text-xl text-gray-800 mb-1">계란후라이와 음료를 드실 수 있어요!</p>
