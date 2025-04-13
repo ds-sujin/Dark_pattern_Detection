@@ -78,9 +78,6 @@ function MenuListPage() {
   
     if (scenario === '1') {
       setShowButtonDP(true);
-      setTimeout(() => {
-        setShowButtonDP(false);
-      }, 5000);
     }
   };
 
@@ -174,10 +171,12 @@ function MenuListPage() {
         <SetPage
           onClose={() => {
             setShowSetPage(false);
-            setRejectedSetOnce(true); // ❗️아니요 누르면 기록
+            setShowButtonDP(false); // 안내창 닫기
+            setRejectedSetOnce(true);
           }}
           onConfirm={() => {
             setShowSetPage(false);
+            setShowButtonDP(false); // 안내창 닫기
             navigate('/complete');
           }}
         />
