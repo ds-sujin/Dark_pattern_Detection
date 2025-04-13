@@ -1,4 +1,3 @@
-// src/pages/MenuListPage.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { logClick } from '../api';
@@ -29,6 +28,7 @@ function MenuListPage() {
   const [showGuide2, setShowGuide2] = useState(scenario === '2');
   const [showSetPopup, setShowSetPage] = useState(false);
   const [showButtonDP, setShowButtonDP] = useState(false);
+  const [rejectedSetOnce, setRejectedSetOnce] = useState(false);
 
   // 타이머
   useEffect(() => {
@@ -69,8 +69,13 @@ function MenuListPage() {
   };
 
   const handlePaymentClick = () => {
+    if (rejectedSetOnce) {
+      navigate('/complete');
+      return;
+    }
+  
     setShowSetPage(true);
-
+  
     if (scenario === '1') {
       setShowButtonDP(true);
       setTimeout(() => {
@@ -82,7 +87,7 @@ function MenuListPage() {
   const total = selected.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
-    <div className="relative flex flex-col h-screen">
+    <div className="relative flex flex-col h-[175vh]">
       {/* ✅ 버튼 가이드 - 상단 중앙 고정 */}
       {showButtonDP && (
         <div className="absolute top-20 left-1/2 transform -translate-x-1/2 z-[999] pointer-events-none">
@@ -93,25 +98,25 @@ function MenuListPage() {
       {/* 상단 타이머 영역 */}
       <div className="p-4 shrink-0 bg-gray-100">
         <div className="flex justify-center items-center mb-2">
-          <span className="font-semibold">남은 시간</span>
-          <span className="ml-2 text-red-600 font-bold">⏱ {formatTime(timeLeft)}</span>
+          <span className="font-semibold text-3xl">남은 시간</span>
+          <span className="ml-2 text-red-600 text-2xl font-bold">⏱ {formatTime(timeLeft)}</span>
         </div>
-        <p className="text-center text-gray-600 text-sm">
+        <p className="text-center text-gray-700 text-base">
           빠르게 주문하세요! 시간이 지나면 주문이 초기화됩니다.
         </p>
       </div>
 
       {/* 메뉴 탭 */}
-      <div className="bg-white px-4 py-2 border-b font-semibold text-lg shrink-0">
+      <div className="bg-white px-4 py-2 border-b font-semibold  shrink-0">
         <div className="flex gap-6">
-          <button className="text-black border-b-2 border-black pb-1">전체메뉴</button>
-          <button className="text-gray-400">점심특선</button>
-          <button className="text-gray-400">음료/주류</button>
+          <button className="text-black border-b-2 border-black pb-1 text-4xl">전체메뉴</button>
+          <button className="text-gray-500 text-2xl">점심특선</button>
+          <button className="text-gray-500 text-2xl">음료/주류</button>
         </div>
       </div>
 
       {/* 메뉴 리스트 */}
-      <div className="flex-1 overflow-y-scroll px-4 py-4">
+      <div className="flex-1 overflow-y-auto px-4 py-4 border-b font-semibold text-xl">
         <div className="grid grid-cols-3 gap-4">
           {menuData.map((item, index) => (
             <div
@@ -126,8 +131,8 @@ function MenuListPage() {
                 alt={item.name}
                 className="w-full h-24 object-cover rounded"
               />
-              <p className="mt-2">{item.name}</p>
-              <p className="font-bold">{item.price.toLocaleString()}원</p>
+              <p className="mt-2 text-lg">{item.name}</p>
+              <p className="text-xl font-bold">{item.price.toLocaleString()}원</p>
               {item.soldOut && (
                 <div className="text-white bg-black text-sm mt-1">품절</div>
               )}
@@ -137,14 +142,14 @@ function MenuListPage() {
       </div>
 
       {/* 결제 영역 */}
-      <div className="bg-white border-t p-4 grid grid-cols-2 shrink-0">
-        <div>
-          <p className="font-semibold mb-2">담은 메뉴</p>
+      <div className="bg-white border-t p-4 grid grid-cols-2 shrink-0 mt-12">
+        <div className="min-h-[9rem] max-h-[9rem]">
+          <p className="font-semibold mb-2 text-3xl">담은 메뉴</p>
           {selected.map((item, i) => (
-            <div key={i} className="flex justify-between items-center mb-1">
+            <div key={i} className="flex justify-between items-center mb-1 text-xl">
               <span>{item.name}</span>
               <div className="flex items-center gap-2">
-                <span className="text-red-600 font-bold">
+                <span className="text-red-600 font-bold  text-2xl">
                   {item.quantity} × {item.price.toLocaleString()}원
                 </span>
               </div>
@@ -152,10 +157,10 @@ function MenuListPage() {
           ))}
         </div>
         <div className="text-right">
-          <p className="font-semibold mb-2">총 결제금액</p>
-          <p className="text-xl font-bold">{total.toLocaleString()}원</p>
+          <p className="font-semibold mb-2 text-3xl mb-2">총 결제금액</p>
+          <p className="text-2xl font-bold">{total.toLocaleString()}원</p>
           <button
-            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 mt-2 rounded disabled:opacity-50"
+            className="bg-red-500 hover:bg-red-600 text-white font-bold  text-4xl py-2 px-6 mt-2 rounded disabled:opacity-50"
             disabled={total === 0}
             onClick={handlePaymentClick}
           >
@@ -167,7 +172,10 @@ function MenuListPage() {
       {/* 세트 제안 팝업 */}
       {showSetPopup && (
         <SetPage
-          onClose={() => setShowSetPage(false)}
+          onClose={() => {
+            setShowSetPage(false);
+            setRejectedSetOnce(true); // ❗️아니요 누르면 기록
+          }}
           onConfirm={() => {
             setShowSetPage(false);
             navigate('/complete');
