@@ -7,15 +7,14 @@ import CompletePage from './pages/CompletePage';
 
 function App() {
   return (
-    <div className="w-screen h-screen overflow-visible">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<StartPage />} />
-          <Route path="/menu" element={<MenuListPage />} />
-          <Route path="/complete" element={<CompletePage />} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<StartPage />} />
+        <Route path="/menu" element={<MenuListPage />} />
+        <Route path="/complete" element={<CompletePage />} />
+        
+      </Routes>
+    </BrowserRouter>
   );
 }
 

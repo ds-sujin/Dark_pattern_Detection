@@ -16,10 +16,8 @@ const StartPage = () => {
   };
 
   return (
-    <div
-    className="w-full h-[200vh] bg-cover bg-center flex flex-col items-center justify-center text-white"
-    style={{ backgroundImage: `url('/start_bg.jpg')` }}
-   >
+    <div className="w-screen min-h-screen bg-cover bg-center flex flex-col items-center justify-center text-white"
+         style={{ backgroundImage: `url('/start_bg.jpg')` }}>
 
       <div className="w-full bg-black bg-opacity-70 text-center py-12 px-6">
         <h1 className="text-3xl md:text-5xl font-bold mb-4">
