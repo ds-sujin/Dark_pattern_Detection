@@ -1,6 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const ButtonDP = () => {
+  useEffect(() => {
+    const message =
+      "두 개의 버튼 내용을 확인해주세요.";
+
+    const utterance = new SpeechSynthesisUtterance(message);
+    utterance.lang = 'ko-KR'; // 한국어 TTS 설정
+    window.speechSynthesis.speak(utterance);
+
+    return () => {
+      window.speechSynthesis.cancel(); // 컴포넌트 언마운트 시 음성 중지
+    };
+  }, []);
+
   return (
     <div className="absolute top-20 left-1/2 transform -translate-x-1/2 z-[999] pointer-events-none">
       <div className="relative w-[440px] bg-white p-5 rounded-2xl shadow-xl border border-gray-300 text-center pointer-events-auto">
@@ -27,3 +40,4 @@ const ButtonDP = () => {
 };
 
 export default ButtonDP;
+

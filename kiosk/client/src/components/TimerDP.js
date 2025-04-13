@@ -2,10 +2,23 @@ import React, { useEffect } from 'react';
 
 const TimerDP = ({ onNext }) => {
   useEffect(() => {
+    // ⏱️ 자동 종료 타이머
     const timer = setTimeout(() => {
       onNext(); // 5초 후 자동 닫기
     }, 5000);
-    return () => clearTimeout(timer);
+
+    // 🔊 TTS 읽기
+    const utterance = new SpeechSynthesisUtterance(
+      "주문 전, 3분 시간 제한이 시작됩니다."
+    );
+    utterance.lang = 'ko-KR'; // 한국어 설정
+    window.speechSynthesis.speak(utterance);
+
+    // 정리 함수
+    return () => {
+      clearTimeout(timer);
+      window.speechSynthesis.cancel(); // 언마운트 시 말 중지
+    };
   }, [onNext]);
 
   return (
@@ -16,7 +29,6 @@ const TimerDP = ({ onNext }) => {
           5초 후 자동으로 시작되며,<br />
           시간 초과 시 주문은 초기화됩니다.
         </p>
-        {/* ✅ 두더지 이미지 */}
         <div className="flex justify-center">
           <img src="/DPlogo.png" alt="다크패턴 마스코트" className="w-24 h-24 object-contain" />
         </div>
