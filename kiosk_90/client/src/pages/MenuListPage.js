@@ -106,9 +106,9 @@ function MenuListPage() {
       {/* 메뉴 탭 */}
       <div className="bg-white px-4 py-2 border-b font-semibold  shrink-0">
         <div className="flex gap-6">
-          <button className="text-black border-b-2 border-black pb-1 text-4xl">전체메뉴</button>
-          <button className="text-gray-500 text-2xl">점심특선</button>
-          <button className="text-gray-500 text-2xl">음료/주류</button>
+          <button className="text-black border-b-2 border-black pb-1 text-4xl" onClick={() => logClick('전체메뉴 버튼')}>전체메뉴</button>
+          <button className="text-gray-500 text-2xl" onClick={() => logClick('점심특선 버튼')}>점심특선</button>
+          <button className="text-gray-500 text-2xl" onClick={() => logClick('음료/주류 버튼')}>음료/주류</button>
         </div>
       </div>
 
@@ -159,7 +159,10 @@ function MenuListPage() {
           <button
             className="bg-red-500 hover:bg-red-600 text-white font-bold  text-4xl py-2 px-6 mt-2 rounded disabled:opacity-50"
             disabled={total === 0}
-            onClick={handlePaymentClick}
+            onClick={() => {
+              logClick('결제 버튼');
+              handlePaymentClick();
+            }}
           >
             결제
           </button>

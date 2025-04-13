@@ -1,4 +1,5 @@
 import React from 'react';
+import { logClick } from '../api';
 
 const SetPage = ({ onClose, onConfirm }) => {
   return (
@@ -12,13 +13,19 @@ const SetPage = ({ onClose, onConfirm }) => {
         </div>
         <div className="flex justify-between gap-4">
           <button
-            onClick={onClose}
+            onClick={() => {
+              logClick('no');
+              onClose();
+            }}
             className="text-xl flex-1 border border-gray-300 text-gray-700 font-semibold py-2 rounded hover:bg-gray-100"
           >
             아니요
           </button>
           <button
-            onClick={onConfirm}
+            onClick={() => {
+              logClick('yes');
+              onConfirm();
+            }}
             className="text-xl flex-1 bg-red-500 text-white font-semibold py-2 rounded hover:bg-red-600"
           >
             네, 추가할게요

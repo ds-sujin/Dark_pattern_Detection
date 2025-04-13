@@ -11,7 +11,7 @@ const StartPage = () => {
     if (!username.trim() || !scenario) return;
     sessionStorage.setItem('username', username);
     sessionStorage.setItem('scenario', scenario); // 선택한 시나리오 저장
-    logClick('StartButton', username);
+    logClick(`StartButton - scenario ${scenario}`, username);
     navigate('/menu');
   };
 
@@ -33,13 +33,19 @@ const StartPage = () => {
         <div className="flex justify-center gap-4 mb-6">
           <button
             className={`px-6 py-2 rounded-full text-lg font-semibold border-2 ${scenario === '1' ? 'bg-red-500 border-red-500' : 'border-white'}`}
-            onClick={() => setScenario('1')}
+            onClick={() => {
+              setScenario('1');
+              sessionStorage.setItem('username', '');
+            }}
           >
             시나리오 1
           </button>
           <button
             className={`px-6 py-2 rounded-full text-lg font-semibold border-2 ${scenario === '2' ? 'bg-red-500 border-red-500' : 'border-white'}`}
-            onClick={() => setScenario('2')}
+            onClick={() => {
+              setScenario('2');
+              sessionStorage.setItem('username', '');
+            }}
           >
             시나리오 2
           </button>
