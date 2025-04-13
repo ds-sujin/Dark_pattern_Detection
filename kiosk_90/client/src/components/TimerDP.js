@@ -5,9 +5,20 @@ const TimerDP = ({ onNext }) => {
     const timer = setTimeout(() => {
       onNext(); // 5초 후 자동 닫기
     }, 5000);
-    return () => clearTimeout(timer);
-  }, [onNext]);
+    // 🔊 TTS 읽기 설정
+    const message =
+    '급한 마음을 불러일으키는 3분 타이머가 존재합니다.';
+    const utterance = new SpeechSynthesisUtterance(message);
+    utterance.lang = 'ko-KR';
+    window.speechSynthesis.speak(utterance);
 
+    // 정리 함수 (타이머 + 음성 중지)
+    return () => {
+    clearTimeout(timer);
+    window.speechSynthesis.cancel();
+    };
+  }, [onNext]);
+  
   return (
     <div className="fixed inset-0 z-30 bg-black bg-opacity-70 flex items-center justify-center">
       <div className="bg-white rounded-xl shadow-2xl py-10 px-55 max-w-sm w-full text-center relative">
