@@ -24,8 +24,7 @@ __pycache__/
 .DS_Store
 
 # CSV, 결과 데이터 (원하는 경우만)
-*.csv
-*.xlsx
+
 
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
