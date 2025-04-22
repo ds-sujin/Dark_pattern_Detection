@@ -1,5 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MainPage from './pages/MainPage';
+import LoginPage from './pages/LoginPage';
+
 
 function App() {
   return (
@@ -10,7 +12,7 @@ function App() {
         <Route path="/history" element={<div>나의 분석기록 페이지</div>} />
         <Route path="/notice" element={<div>공지사항 페이지</div>} />
         <Route path="/mypage" element={<div>마이페이지</div>} />
-        <Route path="/login" element={<div>로그인 페이지</div>} />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </Router>
   );
