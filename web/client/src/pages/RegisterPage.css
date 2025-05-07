@@ -1,0 +1,45 @@
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem 2rem;
+    min-height: calc(100vh - 80px);
+    box-sizing: border-box;
+  }
+  
+  .register-form {
+    max-width: 400px;
+    width: 100%;
+  }
+  
+  .register-form h2 {
+    color: #135;
+  }
+  
+  .register-form input,
+  .register-form button {
+    width: 100%;
+    padding: 0.75rem;
+    margin: 0.75rem 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .register-form button {
+    background-color: #00bcd4;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .error {
+    color: red;
+    font-size: 0.9rem;
+  }
+  
+  .checkbox-container {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+  }
+  
