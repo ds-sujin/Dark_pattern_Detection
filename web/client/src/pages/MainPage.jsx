@@ -1,23 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-
-function MainPage() {
-  return (
-    <div>
-      <h1>메인 페이지</h1>
-      <Link to="/login">로그인</Link>
-      <br />
-      <Link to="/register">회원가입</Link>
-    </div>
-  );
-}
 
 export default function MainPage() {
-  const [user, setUser] = useState({
-    name: "사용자",
-    profileImage: true
-  }); // 테스트용 기본값
+  const [user, setUser] = useState(null);
   const [analysisMode, setAnalysisMode] = useState('image'); // 'image' or 'url'
   const [url, setUrl] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
@@ -59,37 +44,43 @@ export default function MainPage() {
   };
 
   const handleImageUpload = async (file) => {
+    if (!user) {
+      alert("로그인이 필요합니다.");
+      navigate('/login');
+      return;
+    }
+  
     if (!file) return;
-    
+  
     // 파일 유효성 검사
     if (!file.type.startsWith('image/')) {
       alert('이미지 파일만 업로드 가능합니다.');
       return;
-    }
-
+    }  
+  
     try {
       const formData = new FormData();
       formData.append('image', file);
-
+  
       const response = await fetch('/api/analyze/image', {
         method: 'POST',
         credentials: 'include',
         body: formData,
       });
-
+  
       if (!response.ok) {
         throw new Error('이미지 업로드에 실패했습니다.');
       }
-
+  
       const data = await response.json();
-      // 분석 결과 페이지로 이동하거나 결과를 표시
       console.log('분석 결과:', data);
-      
+  
     } catch (error) {
       console.error('이미지 업로드 중 오류 발생:', error);
       alert('이미지 업로드에 실패했습니다. 다시 시도해주세요.');
     }
   };
+  
 
   const handleDragOver = (e) => {
     e.preventDefault();
