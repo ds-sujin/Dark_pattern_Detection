@@ -1,5 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+
+function MainPage() {
+  return (
+    <div>
+      <h1>메인 페이지</h1>
+      <Link to="/login">로그인</Link>
+      <br />
+      <Link to="/register">회원가입</Link>
+    </div>
+  );
+}
 
 export default function MainPage() {
   const [user, setUser] = useState({
