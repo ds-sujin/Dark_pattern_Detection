@@ -1,0 +1,82 @@
+{
+  "comparison_prevention": [
+    "inconsistent_pricing_display(Plan1, Plan2)",
+    "hidden_plan_details(Plan, DetailsLink)",
+    "complex_feature_bundling(Plan1, Plan2)"
+  ],
+  "confirmshaming": [
+    "detect_confirmshaming_phrase(Screen, Phrase)",
+    "check_opt_out_label(Button, Label)",
+    "analyze_emotional_trigger(Screen, Element)"
+  ],
+  "disguised_ads": [
+    "is_disguised_ad_element(Screen, Element)",
+    "has_similar_appearance_to_content(AdElement, ContentElement)",
+    "confuses_user_with_ad_placement(Screen, UserAction)"
+  ],
+  "fake_scarcity": [
+    "detect_fake_low_stock_message(Screen, Message)",
+    "analyze_fake_high_demand_indicators(Screen, Indicator)",
+    "verify_artificial_scarcity_settings(App, Settings)"
+  ],
+  "fake_social_proof": [
+    "detect_fake_testimonials(Screen, Testimonial)",
+    "check_activity_message_legitimacy(Screen, Message)",
+    "validate_social_proof_data(Source, Data)"
+  ],
+  "fake_urgency": [
+    "detect_fake_countdown_timer(Screen, TimerElement)",
+    "identify_repeated_urgency_phrases(Screen, Phrase)",
+    "check_urgency_message_visibility(Screen, MessageElement)"
+  ],
+  "forced_action": [
+    "forced_action_detected(Screen, Action)",
+    "visual_interference_present(Element, Background)",
+    "bundled_consent_detected(ConsentForm, Agreements)"
+  ],
+  "hard_to_cancel": [
+    "hidden_cancellation_option(Screen, Option)",
+    "requires_customer_service_call(Process, Step)",
+    "complex_cancellation_process(Steps, Time)"
+  ],
+  "hidden_costs": [
+    "delayed_cost_reveal(Screen, CostElement)",
+    "initial_low_price_advertisement(Screen, PriceElement)",
+    "lengthy_process_before_cost_reveal(Steps, CostRevealStep)"
+  ],
+  "hidden_subscription": [
+    "hidden_subscription_triggered_by_action(Screen, Action)",
+    "recurring_payment_without_notification(User, PaymentMethod)",
+    "subscription_details_not_disclosed(Screen, SubscriptionOption)"
+  ],
+  "nagging": [
+    "repeated_interruptions(Screen, Request)",
+    "lack_of_permanent_dismissal_option(Request, DismissalOption)",
+    "attention_depletion_metric(User, InteractionFrequency)"
+  ],
+  "obstruction": [
+    "obstruction_detected(Screen, Task)",
+    "confusing_navigation_path(Screen, Action)",
+    "disproportionate_effort_required(Task, Steps)"
+  ],
+  "preselection": [
+    "preselected_checkbox(Screen, Checkbox)",
+    "preselected_cart_items(Screen, Cart)",
+    "preselected_step_options(Step, Option)"
+  ],
+  "sneaking": [
+    "sneaking_hidden_costs(Screen, CostElement)",
+    "sneaking_unwanted_items(Basket, Item)",
+    "sneaking_obscured_information(Screen, InfoElement)"
+  ],
+  "trick_wording": [
+    "ambiguous_instruction(Screen, Instruction)",
+    "misleading_dropdown_option(Dropdown, Option)",
+    "scan_reading_exploit(Content, UserBehavior)"
+  ],
+  "visual_interference": [
+    "low_contrast_text(Screen, TextElement)",
+    "chaotic_interface(Screen, ElementList)",
+    "unexpected_information_placement(Screen, InfoElement)"
+  ]
+}
