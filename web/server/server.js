@@ -3,10 +3,15 @@ const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const { MongoClient } = require('mongodb');
-
+require('dotenv').config();
 const app = express();
+
+
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+const uploadRoute = require('./routes/upload');
 
 const client = new MongoClient(process.env.MONGODB_URL);
 let usersCollection;
@@ -22,6 +27,10 @@ async function connectDB() {
   }
 }
 connectDB();
+
+
+app.use('/upload', uploadRoute);
+
 
 // 회원가입 API
 app.post('/api/register', async (req, res) => {
