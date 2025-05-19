@@ -1,43 +1,36 @@
 .navbar {
-    width: 100%;
-    height: 60px;
-    padding: 0 1rem;
-    max-width: 100vw;
-    overflow-x: hidden;
-    display: flex;
-    align-items: center;
-    background-color: white;
-    border-bottom: 1px solid #ddd;
-    box-sizing: border-box;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 32px;
+  padding: 1rem 1rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid #E6E6E6;
+}
   
-  .navbar-logo {
-    flex: 1; /* 왼쪽 로고 영역 */
-  }
-  
-  .navbar-logo a {
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: #2a5a7d;
-    text-decoration: none;
-  }
-  
-  .navbar-menu {
-    flex: 2; /* 가운데 메뉴를 넓게 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .navbar-menu a {
-    text-decoration: none;
-    color: black;
-    font-size: 0.95rem;
-  }
+.gnb-logo-svg {
+  height: 18px;
+  object-fit: contain;
+  padding-right: 8rem;
+}
+
+/* 가운데 메뉴 */
+.navbar-menu {
+  display: flex;
+  flex: 2;
+  justify-content: center;
+  gap: 3rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-menu a {
+  text-decoration: none;
+  color: #222;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
   
   .navbar-login {
     flex: 1; /* 오른쪽 버튼 영역 */
@@ -48,7 +41,7 @@
   .navbar-login .login-btn {
     background-color: #26c6da;
     color: white;
-    padding: 0.5rem 1rem;
+    padding: 0.75rem 1rem;
     border-radius: 6px;
     text-decoration: none;
     font-size: 0.9rem;

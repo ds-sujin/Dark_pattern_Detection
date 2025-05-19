@@ -1,0 +1,41 @@
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    font-weight: 400;
+    border-radius: 999px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  
+  .btn-text {
+    display: inline-block;
+  }
+  
+  
+  /* outline 버튼 스타일 */
+  .btn-outline {
+    background-color: #fff;
+    color: #111;
+    border: 1px solid #ccc;
+  }
+  
+  .btn-outline:hover {
+    background-color: #59D0D7;
+    border: 1px solid #59D0D7;
+  }
+
+  
+  /* filled 버튼 스타일 */
+  .btn-filled {
+    background-color: #333;
+    color: #fff;
+    border: none;
+  }
+  
+  .btn-filled:hover {
+    background-color: #222;
+  }
