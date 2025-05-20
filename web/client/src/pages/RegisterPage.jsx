@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './RegisterPage.css';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import { validateEmail, validatePassword } from '../utils/validation';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -12,14 +13,7 @@ const RegisterPage = () => {
   const [agree, setAgree] = useState(false);
   const [error, setError] = useState('');
 
-  const validateEmail = (email) =>
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-  const validatePassword = (pw) =>
-    pw.length >= 8 && /[A-Za-z]/.test(pw) && /[0-9]/.test(pw);
-
   const handleRegister = async () => {
-    // 기본 유효성 검사
     if (!name || !id || !password || !confirmPassword) {
       return setError('모든 필드를 입력해주세요.');
     }
@@ -41,7 +35,7 @@ const RegisterPage = () => {
     }
 
     try {
-      const res = await fetch('http://localhost:5000/api/signup', {
+      const res = await fetch('http://localhost:5000/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, id, password }),
@@ -52,7 +46,6 @@ const RegisterPage = () => {
       if (data.success) {
         alert('회원가입이 완료되었습니다.');
         navigate('/register-complete');
-          
       } else {
         setError(data.message || '회원가입에 실패했습니다.');
       }

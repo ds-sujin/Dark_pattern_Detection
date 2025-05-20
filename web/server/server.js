@@ -64,7 +64,7 @@ app.post('/api/login', async (req, res) => {
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(400).json({ success: false, message: '비밀번호가 틀렸습니다.' });
 
-    res.status(200).json({ success: true, message: `${user.name}님 환영합니다!` });
+    res.status(200).json({ success: true, message: `${user.name}님 환영합니다!`,user: { id: user.id, name: user.name } });
   } catch (err) {
     res.status(500).json({ success: false, message: '로그인 중 오류 발생' });
   }
