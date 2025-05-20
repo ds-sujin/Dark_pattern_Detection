@@ -11,21 +11,12 @@ export default function MainPage() {
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
+
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch('/api/user/profile', {
-          credentials: 'include'
-        });
-        if (response.ok) {
-          const userData = await response.json();
-          setUser(userData);
-        }
-      } catch (error) {
-        console.error('사용자 정보를 가져오는데 실패했습니다:', error);
-      }
-    };
-    fetchUserData();
+    const savedUser = sessionStorage.getItem('user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));  // ← 역직렬화
+    }
   }, []);
 
   const handleLogout = async () => {
