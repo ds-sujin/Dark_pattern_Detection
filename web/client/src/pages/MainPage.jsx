@@ -41,36 +41,35 @@ export default function MainPage() {
       return;
     }
   
-    if (!file) return;
-  
-    // 파일 유효성 검사
-    if (!file.type.startsWith('image/')) {
+    if (!file || !file.type.startsWith('image/')) {
       alert('이미지 파일만 업로드 가능합니다.');
       return;
-    }  
+    }
   
     try {
       const formData = new FormData();
       formData.append('image', file);
+      formData.append('user_id', user.id);         // 사용자 식별 정보 전달
+      formData.append('user_name', user.name);     // 사용자 이름 전달
   
-      const response = await fetch('/api/analyze/image', {
+      const response = await fetch('http://localhost:5000/upload', {
         method: 'POST',
-        credentials: 'include',
         body: formData,
       });
   
-      if (!response.ok) {
-        throw new Error('이미지 업로드에 실패했습니다.');
+      const result = await response.json();
+  
+      if (response.ok) {
+        alert(`OCR 추출 성공: ${result.text || '이미지 업로드 완료'}`);
+      } else {
+        alert('업로드 실패: ' + result.error);
       }
-  
-      const data = await response.json();
-      console.log('분석 결과:', data);
-  
     } catch (error) {
-      console.error('이미지 업로드 중 오류 발생:', error);
-      alert('이미지 업로드에 실패했습니다. 다시 시도해주세요.');
+      console.error(error);
+      alert('이미지 업로드 중 오류가 발생했습니다.');
     }
   };
+ 
   
 
   const handleDragOver = (e) => {

@@ -1,9 +1,10 @@
+console.log('[DEBUG] PRIVATE_KEY:', process.env.GOOGLE_DRIVE_PRIVATE_KEY?.slice(0, 30));
+
 const { google } = require('googleapis');
 const fs = require('fs');
-require('dotenv').config();
 
 const auth = new google.auth.JWT(
-  process.env.GOOGLE_CLIENT_EMAIL,
+  process.env.GOOGLE_DRIVE_CLIENT_EMAIL,
   null,
   process.env.GOOGLE_DRIVE_PRIVATE_KEY.replace(/\\n/g, '\n'),
   ['https://www.googleapis.com/auth/drive']
@@ -18,33 +19,17 @@ async function uploadToDrive(filePath, fileName) {
   };
 
   const media = {
-    mimeType: 'image/jpeg',
+    mimeType: 'image/png',
     body: fs.createReadStream(filePath),
   };
 
-  const response = await drive.files.create({
+  const file = await drive.files.create({
     resource: fileMetadata,
     media,
-    fields: 'id',
+    fields: 'id, webViewLink',
   });
 
-  const fileId = response.data.id;
-
-  // 파일 공개 설정
-  await drive.permissions.create({
-    fileId,
-    requestBody: {
-      role: 'reader',
-      type: 'anyone',
-    },
-  });
-
-  const result = await drive.files.get({
-    fileId,
-    fields: 'webViewLink, webContentLink',
-  });
-
-  return result.data.webViewLink;
+  return file.data.webViewLink;
 }
 
 module.exports = { uploadToDrive };
