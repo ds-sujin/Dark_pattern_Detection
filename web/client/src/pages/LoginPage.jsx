@@ -10,7 +10,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    // 👉 클라이언트 측 유효성 검사 추가
+    // 클라이언트 측 유효성 검사
     if (!validateEmail(id)) {
       alert('유효한 이메일을 입력해주세요.');
       return;
@@ -31,12 +31,14 @@ const LoginPage = () => {
       const data = await response.json();
 
       if (data.success) {
-        sessionStorage.setItem('user', JSON.stringify(data.user));
-        navigate('/main'); // 메인 페이지로 이동
+        alert('로그인 성공!');
+        sessionStorage.setItem('user', JSON.stringify(data.user)); // 또는 localStorage.setItem(...)
+        navigate('/main');
       } else {
         alert('로그인 실패: ' + data.message);
       }
     } catch (err) {
+      console.error(err);
       alert('서버 오류로 로그인에 실패했습니다.');
     }
   };
