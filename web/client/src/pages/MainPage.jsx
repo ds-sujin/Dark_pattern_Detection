@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 
 export default function MainPage() {
   const [user, setUser] = useState(null);
-  const [analysisMode, setAnalysisMode] = useState('image'); // 'image' or 'url'
+  const [analysisMode, setAnalysisMode] = useState('image');
   const [url, setUrl] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -11,11 +11,10 @@ export default function MainPage() {
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
-
   useEffect(() => {
     const savedUser = sessionStorage.getItem('user');
     if (savedUser) {
-      setUser(JSON.parse(savedUser));  // ← 역직렬화
+      setUser(JSON.parse(savedUser));
     }
   }, []);
 
@@ -27,6 +26,7 @@ export default function MainPage() {
       });
       if (response.ok) {
         setUser(null);
+        sessionStorage.removeItem('user');
         navigate('/login');
       }
     } catch (error) {
@@ -40,25 +40,25 @@ export default function MainPage() {
       navigate('/login');
       return;
     }
-  
+
     if (!file || !file.type.startsWith('image/')) {
       alert('이미지 파일만 업로드 가능합니다.');
       return;
     }
-  
+
     try {
       const formData = new FormData();
       formData.append('image', file);
-      formData.append('user_id', user.id);         // 사용자 식별 정보 전달
-      formData.append('user_name', user.name);     // 사용자 이름 전달
-  
+      formData.append('user_id', user.id);
+      formData.append('user_name', user.name);
+
       const response = await fetch('http://localhost:5000/upload', {
         method: 'POST',
         body: formData,
       });
-  
+
       const result = await response.json();
-  
+
       if (response.ok) {
         alert(`OCR 추출 성공: ${result.text || '이미지 업로드 완료'}`);
       } else {
@@ -69,8 +69,6 @@ export default function MainPage() {
       alert('이미지 업로드 중 오류가 발생했습니다.');
     }
   };
- 
-  
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -103,7 +101,6 @@ export default function MainPage() {
       return;
     }
 
-    // URL 형식 검사
     try {
       new URL(url);
     } catch {
@@ -116,9 +113,7 @@ export default function MainPage() {
     try {
       const response = await fetch('/api/analyze/url', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({ url: url.trim() })
       });
@@ -128,7 +123,6 @@ export default function MainPage() {
       }
 
       const data = await response.json();
-      // 분석 결과 페이지로 이동하거나 결과를 표시
       console.log('URL 분석 결과:', data);
 
     } catch (error) {
@@ -176,17 +170,19 @@ export default function MainPage() {
                     <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
                       {user.profileImage ? (
                         <img 
-                          src="/public/profile.jpg" 
+                          src={user.profileImage} 
                           alt="프로필" 
                           className="w-full h-full rounded-full object-cover"
                         />
                       ) : (
-                        <span className="text-gray-600 text-sm">
-                          {user.name?.charAt(0)}
+                        <span className="text-gray-600 text-sm font-bold">
+                          {user.name?.charAt(0) || '유'}
                         </span>
                       )}
                     </div>
-                    <span className="text-gray-700 font-medium ml-3">사용자</span>
+                    <span className="text-gray-700 font-medium ml-3">
+                      {user.name || '사용자'}
+                    </span>
                   </div>
                   <button
                     onClick={handleLogout}
@@ -218,10 +214,8 @@ export default function MainPage() {
 
       <br />
 
-      {/* 여백 주기 */}
       <div className="mt-96 h-4"></div>
 
-      {/* 전체 이미지 섹션 */}
       <div className="overflow-hidden">
         <img 
           src="/service_describe.jpg" 
@@ -235,7 +229,6 @@ export default function MainPage() {
         />
       </div>
 
-      {/* 다크패턴 분석하기 섹션 */}
       <div className="max-w-4xl mx-auto mt-8 px-4">
         <h1 className="text-2xl font-bold text-center mb-2">다크패턴 분석하기</h1>
         <p className="text-gray-600 text-center text-sm mb-8">이미지 또는 URL로 분석이 가능합니다.</p>
@@ -245,8 +238,8 @@ export default function MainPage() {
             <button 
               className={`px-4 py-2 text-sm font-medium rounded-md focus:outline-none ${
                 analysisMode === 'image'
-                ? 'text-gray-900 border-b-2 border-gray-900'
-                : 'text-gray-500 hover:text-gray-900'
+                  ? 'text-gray-900 border-b-2 border-gray-900'
+                  : 'text-gray-500 hover:text-gray-900'
               }`}
               onClick={() => setAnalysisMode('image')}
             >
@@ -255,8 +248,8 @@ export default function MainPage() {
             <button 
               className={`px-4 py-2 text-sm font-medium rounded-md focus:outline-none ${
                 analysisMode === 'url'
-                ? 'text-gray-900 border-b-2 border-gray-900'
-                : 'text-gray-500 hover:text-gray-900'
+                  ? 'text-gray-900 border-b-2 border-gray-900'
+                  : 'text-gray-500 hover:text-gray-900'
               }`}
               onClick={() => setAnalysisMode('url')}
             >
@@ -304,9 +297,7 @@ export default function MainPage() {
                     placeholder="분석할 웹사이트의 URL을 입력하세요"
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent"
                     onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        handleUrlAnalysis();
-                      }
+                      if (e.key === 'Enter') handleUrlAnalysis();
                     }}
                   />
                   <button
