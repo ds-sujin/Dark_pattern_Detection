@@ -1,15 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const path = require('path');
 const fs = require('fs');
-const vision = require('@google-cloud/vision');
-const { uploadToDrive } = require('../drive/googleDrive');
-const Image = require('../db/image');
+const path = require('path');
+const { createWorker } = require('tesseract.js');
+const Image = require('../db/image'); // Mongoose 모델
 
+// 업로드 설정
 const upload = multer({ dest: 'uploads/' });
-const client = new vision.ImageAnnotatorClient();
 
+// OCR 처리 라우터
 router.post('/', upload.single('image'), async (req, res) => {
   try {
     const { user_id, user_name, url } = req.body;
@@ -17,33 +17,42 @@ router.post('/', upload.single('image'), async (req, res) => {
     let finalUrl = '';
     let textResult = '';
 
-    // === [1] 이미지 파일 업로드 경로 ===
     if (req.file) {
       const file = req.file;
+      const imagePath = file.path;
+      console.log('[업로드] 파일 수신:', file.originalname);
 
-      // 1-1) 이미지 파일 Google Drive 업로드
-      finalUrl = await uploadToDrive(file.path, file.originalname);
+      // Tesseract OCR 처리
+      const worker = await createWorker({
+        gzip: false, // kor.traineddata.gz 로딩 방지
+      });
 
-      // 1-2) OCR 처리 (Google Vision API)
-      const [result] = await client.textDetection(file.path);
-      textResult = result.fullTextAnnotation?.text || '텍스트 없음';
+      try {
+        await worker.load();
+        await worker.loadLanguage('kor');  // ⚠️ 반드시 문자열
+        await worker.initialize('kor');
 
-      // 1-3) 임시 파일 삭제
-      fs.unlinkSync(file.path);
-    }
+        const { data: { text } } = await worker.recognize(imagePath);
+        textResult = text.trim() || '텍스트 없음';
+        console.log('[OCR 결과]:', textResult.substring(0, 100) + '...');
+      } catch (ocrErr) {
+        console.error('[OCR 오류]', ocrErr);
+        textResult = 'OCR 실패';
+      } finally {
+        await worker.terminate();
+        fs.unlinkSync(imagePath); // 임시 이미지 파일 삭제
+      }
 
-    // === [2] URL 직접 입력 시 ===
-    else if (url) {
+      finalUrl = `local:${file.filename}`; // 로컬 경로 표시용
+
+    } else if (url) {
       finalUrl = url;
-      textResult = '[URL 등록 - OCR 생략]';  // OCR 하지 않음 (원하면 API로 받아도 됨)
-    }
-
-    // === [3] 아무것도 없을 경우 ===
-    else {
+      textResult = '[URL 등록 - OCR 생략]';
+    } else {
       return res.status(400).json({ success: false, error: '이미지 파일 또는 URL이 필요합니다.' });
     }
 
-    // === [4] MongoDB 저장 ===
+    // MongoDB 저장
     const newImage = new Image({
       url: finalUrl,
       user_id,
@@ -53,8 +62,8 @@ router.post('/', upload.single('image'), async (req, res) => {
     });
 
     await newImage.save();
+    console.log('[MongoDB 저장 완료]');
 
-    // === [5] 응답 반환 ===
     res.status(200).json({
       success: true,
       message: 'Upload + OCR 성공',
@@ -64,7 +73,7 @@ router.post('/', upload.single('image'), async (req, res) => {
 
   } catch (err) {
     console.error('[업로드 오류]', err);
-    res.status(500).json({ success: false, error: '업로드 또는 OCR 실패' });
+    res.status(500).json({ success: false, error: '서버 오류 또는 OCR 실패' });
   }
 });
 

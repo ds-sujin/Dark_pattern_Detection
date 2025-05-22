@@ -20,13 +20,13 @@ export default function MainPage() {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include'
-      });
+      const response = await fetch('http://localhost:5000/api/auth/logout', {
+          method: 'POST',
+          credentials: 'include',
+        });
       if (response.ok) {
-        setUser(null);
         sessionStorage.removeItem('user');
+        setUser(null);
         navigate('/login');
       }
     } catch (error) {
@@ -36,7 +36,7 @@ export default function MainPage() {
 
   const handleImageUpload = async (file) => {
     if (!user) {
-      alert("로그인이 필요합니다.");
+      alert('로그인이 필요합니다.');
       navigate('/login');
       return;
     }
@@ -83,7 +83,6 @@ export default function MainPage() {
   const handleDrop = (e) => {
     e.preventDefault();
     setIsDragging(false);
-    
     const file = e.dataTransfer.files[0];
     setSelectedImage(file);
     handleImageUpload(file);
@@ -115,7 +114,7 @@ export default function MainPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ url: url.trim() })
+        body: JSON.stringify({ url: url.trim() }),
       });
 
       if (!response.ok) {
@@ -124,7 +123,6 @@ export default function MainPage() {
 
       const data = await response.json();
       console.log('URL 분석 결과:', data);
-
     } catch (error) {
       console.error('URL 분석 중 오류 발생:', error);
       alert('URL 분석에 실패했습니다. 다시 시도해주세요.');
@@ -139,46 +137,35 @@ export default function MainPage() {
       <nav className="bg-white shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* 로고 */}
             <div className="flex-shrink-0 w-1/4">
               <span className="text-[#024B6E] text-xl font-bold">
                 DARKPATTERNDETECTION
               </span>
             </div>
 
-            {/* 메뉴 */}
             <div className="flex-1 flex justify-between items-center px-20">
-              <Link to="/analyze" className="text-gray-600 hover:text-[#024B6E] font-medium no-underline">
+              <Link to="/analyze" className="text-gray-600 hover:text-[#024B6E] font-medium">
                 다크패턴 분석하기
               </Link>
-              <Link to="/history" className="text-gray-600 hover:text-[#024B6E] font-medium no-underline">
+              <Link to="/history" className="text-gray-600 hover:text-[#024B6E] font-medium">
                 나의 분석기록
               </Link>
-              <Link to="/notice" className="text-gray-600 hover:text-[#024B6E] font-medium no-underline">
+              <Link to="/notice" className="text-gray-600 hover:text-[#024B6E] font-medium">
                 공지사항
               </Link>
-              <Link to="/mypage" className="text-gray-600 hover:text-[#024B6E] font-medium no-underline">
+              <Link to="/mypage" className="text-gray-600 hover:text-[#024B6E] font-medium">
                 마이페이지
               </Link>
             </div>
 
-            {/* 프로필 & 로그아웃 */}
             <div className="flex-shrink-0 w-1/4 flex justify-end items-center">
               {user ? (
                 <div className="flex items-center">
                   <div className="flex items-center mr-12">
                     <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                      {user.profileImage ? (
-                        <img 
-                          src={user.profileImage} 
-                          alt="프로필" 
-                          className="w-full h-full rounded-full object-cover"
-                        />
-                      ) : (
-                        <span className="text-gray-600 text-sm font-bold">
-                          {user.name?.charAt(0) || '유'}
-                        </span>
-                      )}
+                      <span className="text-gray-600 text-sm font-bold">
+                        {user.name?.charAt(0) || '유'}
+                      </span>
                     </div>
                     <span className="text-gray-700 font-medium ml-3">
                       {user.name || '사용자'}
@@ -193,13 +180,13 @@ export default function MainPage() {
                 </div>
               ) : (
                 <div className="flex items-center">
-                  <Link 
+                  <Link
                     to="/login"
-                    className="text-gray-600 hover:text-[#024B6E] font-medium mr-12"
+                    className="text-gray-600 hover:text-[#024B6E] font-medium mr-6"
                   >
                     로그인
                   </Link>
-                  <Link 
+                  <Link
                     to="/register"
                     className="text-gray-600 hover:text-[#024B6E] font-medium"
                   >
@@ -213,30 +200,31 @@ export default function MainPage() {
       </nav>
 
       <br />
-
       <div className="mt-96 h-4"></div>
 
       <div className="overflow-hidden">
-        <img 
-          src="/service_describe.jpg" 
-          alt="서비스 설명" 
+        <img
+          src="/service_describe.jpg"
+          alt="서비스 설명"
           className="w-screen h-auto object-cover"
           style={{
             maxWidth: '100vw',
             marginLeft: 'calc(-50vw + 50%)',
-            marginRight: 'calc(-50vw + 50%)'
+            marginRight: 'calc(-50vw + 50%)',
           }}
         />
       </div>
 
       <div className="max-w-4xl mx-auto mt-8 px-4">
         <h1 className="text-2xl font-bold text-center mb-2">다크패턴 분석하기</h1>
-        <p className="text-gray-600 text-center text-sm mb-8">이미지 또는 URL로 분석이 가능합니다.</p>
-        
+        <p className="text-gray-600 text-center text-sm mb-8">
+          이미지 또는 URL로 분석이 가능합니다.
+        </p>
+
         <div className="bg-white rounded-lg shadow-lg p-6">
           <div className="flex items-center justify-center space-x-4 mb-4">
-            <button 
-              className={`px-4 py-2 text-sm font-medium rounded-md focus:outline-none ${
+            <button
+              className={`px-4 py-2 text-sm font-medium rounded-md ${
                 analysisMode === 'image'
                   ? 'text-gray-900 border-b-2 border-gray-900'
                   : 'text-gray-500 hover:text-gray-900'
@@ -245,8 +233,8 @@ export default function MainPage() {
             >
               이미지로 분석
             </button>
-            <button 
-              className={`px-4 py-2 text-sm font-medium rounded-md focus:outline-none ${
+            <button
+              className={`px-4 py-2 text-sm font-medium rounded-md ${
                 analysisMode === 'url'
                   ? 'text-gray-900 border-b-2 border-gray-900'
                   : 'text-gray-500 hover:text-gray-900'
@@ -283,7 +271,9 @@ export default function MainPage() {
                       <p className="text-gray-500">{selectedImage.name}</p>
                     </div>
                   ) : (
-                    <p className="text-gray-500">이미지 파일을 업로드 <br /> 또는 <br /> 이곳에 드래그 하세요.</p>
+                    <p className="text-gray-500">
+                      이미지 파일을 업로드 <br /> 또는 <br /> 이곳에 드래그 하세요.
+                    </p>
                   )}
                 </div>
               </div>
@@ -295,13 +285,13 @@ export default function MainPage() {
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
                     placeholder="분석할 웹사이트의 URL을 입력하세요"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400"
                     onKeyPress={(e) => {
                       if (e.key === 'Enter') handleUrlAnalysis();
                     }}
                   />
                   <button
-                    className={`px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:border-gray-500 hover:text-gray-900 transition-colors ${
+                    className={`px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:border-gray-500 hover:text-gray-900 ${
                       isLoading ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                     onClick={handleUrlAnalysis}
