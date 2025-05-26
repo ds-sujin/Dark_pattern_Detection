@@ -5,6 +5,8 @@ const fs = require('fs');
 const path = require('path');
 const { createWorker } = require('tesseract.js');
 const Image = require('../db/image'); // Mongoose 모델
+const Tesseract = require('tesseract.js');
+
 
 // 업로드 설정
 const upload = multer({ dest: 'uploads/' });
@@ -23,25 +25,22 @@ router.post('/', upload.single('image'), async (req, res) => {
       console.log('[업로드] 파일 수신:', file.originalname);
 
       // Tesseract OCR 처리
-      const worker = await createWorker({
-        gzip: false, // kor.traineddata.gz 로딩 방지
-      });
-
       try {
-        await worker.load();
-        await worker.loadLanguage('kor');  // ⚠️ 반드시 문자열
-        await worker.initialize('kor');
-
-        const { data: { text } } = await worker.recognize(imagePath);
+        const {
+          data: { text }
+        } = await Tesseract.recognize(imagePath, 'kor', {
+          logger: (m) => console.log('[OCR 진행 상태]', m),
+        });
+      
         textResult = text.trim() || '텍스트 없음';
         console.log('[OCR 결과]:', textResult.substring(0, 100) + '...');
       } catch (ocrErr) {
         console.error('[OCR 오류]', ocrErr);
         textResult = 'OCR 실패';
       } finally {
-        await worker.terminate();
-        fs.unlinkSync(imagePath); // 임시 이미지 파일 삭제
+        fs.unlinkSync(imagePath); // OCR 후 임시 파일 삭제
       }
+     
 
       finalUrl = `local:${file.filename}`; // 로컬 경로 표시용
 
