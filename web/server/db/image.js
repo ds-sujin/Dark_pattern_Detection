@@ -4,8 +4,10 @@ const imageSchema = new mongoose.Schema({
   url: String,
   user_id: String,
   user_name: String,
+  text: String,
+  uploaded_at: Date
 }, {
-  versionKey: false // __v 필드 아예 생성하지 않음
+  versionKey: false
 });
 
 module.exports = mongoose.model('Image', imageSchema, 'image');

@@ -1,10 +1,8 @@
-// src/pages/LoginPage.jsx
-
 import React, { useState } from 'react';
-import './LoginPage.css'; // 별도 스타일링 파일
+import './LoginPage.css';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar'; // 위치에 맞게 조정
-
+import Navbar from '../components/Navbar';
+import { validateEmail, validatePassword } from '../utils/validation';
 
 const LoginPage = () => {
   const [id, setId] = useState('');
@@ -12,18 +10,36 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    const response = await fetch('http://localhost:5000/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id, password }),
-    });
-    const data = await response.json();
+    // 클라이언트 측 유효성 검사
+    if (!validateEmail(id)) {
+      alert('유효한 이메일을 입력해주세요.');
+      return;
+    }
 
-    if (data.success) {
-      sessionStorage.setItem('user', data.user);
-      navigate('/main'); // 메인 페이지로 이동
-    } else {
-      alert('로그인 실패: ' + data.message);
+    if (!validatePassword(password)) {
+      alert('비밀번호는 8자 이상이며 문자와 숫자를 포함해야 합니다.');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:5000/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, password }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert('로그인 성공!');
+        sessionStorage.setItem('user', JSON.stringify(data.user)); // 또는 localStorage.setItem(...)
+        navigate('/main');
+      } else {
+        alert('로그인 실패: ' + data.message);
+      }
+    } catch (err) {
+      console.error(err);
+      alert('서버 오류로 로그인에 실패했습니다.');
     }
   };
 
@@ -48,9 +64,15 @@ const LoginPage = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           <button onClick={handleLogin}>로그인</button>
-          <p>계정이 아직 없으신가요? <a href="/register">회원가입 하기</a></p>
+          <p>
+            계정이 아직 없으신가요? <a href="/register">회원가입 하기</a>
+          </p>
         </div>
-        <img src="/loginimage.png" alt="AI 이미지" className="login-image" />
+        <img
+          src="/loginimage.png"
+          alt="AI 이미지"
+          className="login-image"
+        />
       </div>
     </>
   );
