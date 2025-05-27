@@ -1,50 +1,34 @@
 const { google } = require('googleapis');
 const fs = require('fs');
-require('dotenv').config();
+const path = require('path');
 
-const auth = new google.auth.JWT(
-  process.env.GOOGLE_CLIENT_EMAIL,
-  null,
-  process.env.GOOGLE_DRIVE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-  ['https://www.googleapis.com/auth/drive']
-);
-
-const drive = google.drive({ version: 'v3', auth });
+// ✅ JSON 키파일을 통한 인증 방식
+const auth = new google.auth.GoogleAuth({
+  keyFile: path.join(__dirname, '../restored-key.json'),
+  scopes: ['https://www.googleapis.com/auth/drive'],
+});
 
 async function uploadToDrive(filePath, fileName) {
+  const authClient = await auth.getClient();
+  const drive = google.drive({ version: 'v3', auth: authClient });
+
   const fileMetadata = {
     name: fileName,
     parents: [process.env.GOOGLE_DRIVE_FOLDER_ID],
   };
 
   const media = {
-    mimeType: 'image/jpeg',
+    mimeType: 'image/png',
     body: fs.createReadStream(filePath),
   };
 
-  const response = await drive.files.create({
+  const file = await drive.files.create({
     resource: fileMetadata,
     media,
-    fields: 'id',
+    fields: 'id, webViewLink',
   });
 
-  const fileId = response.data.id;
-
-  // 파일 공개 설정
-  await drive.permissions.create({
-    fileId,
-    requestBody: {
-      role: 'reader',
-      type: 'anyone',
-    },
-  });
-
-  const result = await drive.files.get({
-    fileId,
-    fields: 'webViewLink, webContentLink',
-  });
-
-  return result.data.webViewLink;
+  return file.data.webViewLink;
 }
 
 module.exports = { uploadToDrive };
