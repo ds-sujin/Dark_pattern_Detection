@@ -1,0 +1,5 @@
+﻿Pattern String,Pattern Category,predicted_predicate
+"I’ve read and accept the terms & conditions * , I also authorize Bosley to contact me by phone or text utilizing automated dialing equipment, as well as by email or mail with information about appointments, products, services, news or promotions. I also agree to Bosley's Terms of Service. Otherwise, call Bosley at 800-985-6405 to request your FREE information kit or to schedule your FREE no-obligation consultation.",Forced Action,"hide_opt_out(ui_element, opt_out_link)"
+I accept the Terms & Conditions of the FREE Brother Care Program and agree to receive exclusive offers and general promotions from Brother. I may withdraw my consent at any time.,Forced Action,"force_user_action(ui_element, desired_action)"
+I would like to join Backstage Pass & agree to the Terms & Conditions & to receive emails & other promotional offers.,Forced Action,"force_user_action(ui_element, desired_action)"
+I agree to receive marketing emails from Natural Life and agree to our Privacy Policy and terms of use.,Forced Action,"force_user_action(ui_element, desired_action)"
