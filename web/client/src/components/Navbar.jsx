@@ -10,7 +10,6 @@ const Navbar = () => {
       </div>
       <ul className="navbar-menu">
         <li><Link to="/analyze">다크패턴 분석하기</Link></li>
-        <li><Link to="/history">나의 분석기록</Link></li>
         <li><Link to="/notice">공지사항</Link></li>
         <li><Link to="/mypage">마이페이지</Link></li>
       </ul>

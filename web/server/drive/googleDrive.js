@@ -2,7 +2,7 @@ const { google } = require('googleapis');
 const fs = require('fs');
 const path = require('path');
 
-// ✅ JSON 키파일을 통한 인증 방식
+// JSON 키파일을 통한 인증 방식
 const auth = new google.auth.GoogleAuth({
   keyFile: path.join(__dirname, '../restored-key.json'),
   scopes: ['https://www.googleapis.com/auth/drive'],
