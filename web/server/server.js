@@ -45,10 +45,14 @@ mongoose.connect(process.env.MONGODB_URL, {
 const authRoute = require('./routes/auth');
 const uploadRoute = require('./routes/upload');
 const NewsuploadRoute = require('./routes/image_upload');
+const newsRoutes = require('./routes/news');
+const quizRoutes = require('./routes/quiz');
 
 app.use('/api/auth', authRoute);
 app.use('/upload', uploadRoute);
 app.use('/news_uploads', NewsuploadRoute)
+app.use('/news', newsRoutes);
+app.use('/quiz', quizRoutes);
 
 // 회원가입 API
 app.post('/api/register', async (req, res) => {
