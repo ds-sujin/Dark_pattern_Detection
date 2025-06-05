@@ -1,0 +1,22 @@
+predicate,type
+"obfuscate_comparison_details(ui_element, product_details)",misdirection
+"use_confirmshaming_language(ui_element, opt_out_button)",misdirection
+"disguise_ad_as_content(ui_element, ad_content)",misdirection
+"display_fake_stock_counter(ui_element, stock_counter)",scarcity
+"inject_misleading_demand_message(ui_element, demand_message)",scarcity
+"simulate_high_demand(ui_element, sales_counter)",scarcity
+"generate_fake_endorsement(endorsement, location)",social_proof
+inject_random_time(time),social_proof
+"display_activity_message_overlay(message, item)",social_proof
+"inject_fake_timer(ui_element, animation_state)",urgency
+"reset_countdown_timer(ui_element, default_configuration)",urgency
+"display_urgency_message(ui_element, prominence_level)",urgency
+"force_user_action(ui_element, desired_action)",forced_action
+"hide_opt_out(ui_element, opt_out_link)",forced_action
+"repeat_request(ui_element, request_message)",forced_action
+hide_cancellation_option(service),obstruction
+"require_customer_service_interaction(service, action)",obstruction
+"create_obstacle_for_privacy_settings(service, setting)",obstruction
+"hide_additional_costs(ui_element, purchase_process)",sneaking
+"create_hidden_subscription(ui_element, user_action)",sneaking
+"preselect_option(ui_element, default_option)",sneaking
