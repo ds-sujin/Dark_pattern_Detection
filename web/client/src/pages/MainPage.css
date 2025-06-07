@@ -1,0 +1,20 @@
+/* MainPage.css */
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+  }
+  
+  nav {
+    border-bottom: 1px solid #eee;
+  }
+  
+  h1 {
+    font-size: 1.75rem;
+  }
+  
+  button {
+    cursor: pointer;
+  }
+  

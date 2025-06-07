@@ -1,55 +1,67 @@
+/* Navbar.css */
 .navbar {
-    width: 100%;
-    height: 60px;
-    padding: 0 1rem;
-    max-width: 100vw;
-    overflow-x: hidden;
-    display: flex;
-    align-items: center;
-    background-color: white;
-    border-bottom: 1px solid #ddd;
-    box-sizing: border-box;
-  }
-  
-  .navbar-logo {
-    flex: 1; /* 왼쪽 로고 영역 */
-  }
-  
-  .navbar-logo a {
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: #2a5a7d;
-    text-decoration: none;
-  }
-  
-  .navbar-menu {
-    flex: 2; /* 가운데 메뉴를 넓게 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .navbar-menu a {
-    text-decoration: none;
-    color: black;
-    font-size: 0.95rem;
-  }
-  
-  .navbar-login {
-    flex: 1; /* 오른쪽 버튼 영역 */
-    display: flex;
-    justify-content: flex-end;
-  }
-  
-  .navbar-login .login-btn {
-    background-color: #26c6da;
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    text-decoration: none;
-    font-size: 0.9rem;
-  }
+  width: 100%;
+  height: 64px;
+  background-color: white;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-logo {
+  font-weight: 700;
+  color: #1e3a8a; /* Tailwind's blue-800 */
+  font-size: 1.1rem;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.navbar-links button {
+  background: none;
+  border: none;
+  font-size: 0.95rem;
+  color: #374151; /* gray-700 */
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.navbar-links button:hover {
+  color: #1d4ed8; /* blue-700 */
+  font-weight: 500;
+}
+
+.navbar-auth {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-name {
+  font-weight: 500;
+  color: #111827; /* gray-900 */
+}
+
+.logout-btn {
+  background-color: #ef4444; /* red-500 */
+  color: white;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.logout-btn:hover {
+  background-color: #dc2626; /* red-600 */
+}

@@ -1,18 +1,19 @@
+import './AnalyzePage.css';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar'; 
+import Navbar from '../components/Navbar';
 
 const AnalyzePage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const navigate = useNavigate();
-    <Navbar />  
+
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setSelectedImage({ image: imageUrl, fileName: file.name, isSample: false });
 
-      // 바로 결과 페이지로 이동
+      // 결과 페이지로 이동
       navigate('/analyze/result', {
         state: {
           image: imageUrl,
@@ -24,7 +25,7 @@ const AnalyzePage = () => {
   };
 
   const handleSampleImageUse = () => {
-    const sampleImage = '/sample_darkpattern.png'; // public 경로 기준
+    const sampleImage = '/sample_darkpattern.png';
     const sampleFileName = 'sample_darkpattern.png';
 
     setSelectedImage({
@@ -33,7 +34,6 @@ const AnalyzePage = () => {
       isSample: true,
     });
 
-    // 샘플 이미지 정보 전달
     navigate('/analyze/result', {
       state: {
         image: sampleImage,
@@ -44,48 +44,32 @@ const AnalyzePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8 flex flex-col items-center">
-      <h1 className="text-2xl font-bold mb-6">🕵️ 다크패턴 분석하기</h1>
-
-      <div className="flex flex-col md:flex-row justify-center items-start gap-8">
-        {/* 업로드 영역 */}
-        <div className="bg-white p-6 rounded shadow-md w-full max-w-md">
-          <h2 className="text-lg font-semibold mb-4">이미지 업로드</h2>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            className="mb-4"
-          />
-          {selectedImage && !selectedImage.isSample && (
-            <div className="mt-4">
-              <p className="text-sm text-gray-700 mb-2">업로드된 이미지:</p>
-              <img
-                src={selectedImage.image}
-                alt="업로드 미리보기"
-                className="w-full max-h-64 object-contain border rounded"
-              />
-            </div>
-          )}
+    <>
+      <Navbar />
+      <div className="analyze-container">
+        <div className="upload-box">
+          <h2>AI를 이용한 다크패턴 분석 서비스</h2>
+          <p>이미지 파일을 통해 분석을 해드립니다.</p>
+          <label className="upload-button">
+            이미지 파일 업로드
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              style={{ display: 'none' }}
+            />
+          </label>
+          <p>또는<br />이곳에 파일을 드래그 하세요.</p>
         </div>
 
-        {/* 샘플 이미지 영역 */}
-        <div className="bg-white p-6 rounded shadow-md w-full max-w-md text-center">
-          <h2 className="text-lg font-semibold mb-4">샘플 이미지 사용</h2>
-          <img
-            src="/sample_darkpattern.png"
-            alt="샘플 이미지"
-            className="w-full h-48 object-contain mb-4 border"
-          />
-          <button
-            onClick={handleSampleImageUse}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-          >
-            사용하기
-          </button>
+        <div className="sample-box">
+          <h4>샘플이미지</h4>
+          <p>아래 이미지를 사용해 분석해보세요.</p>
+          <img src="/sample_darkpattern.png" alt="샘플 이미지" />
+          <button onClick={handleSampleImageUse}>사용하기 →</button>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

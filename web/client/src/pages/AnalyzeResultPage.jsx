@@ -1,11 +1,12 @@
 // AnalyzeResultPage.jsx
-import React from 'react';
+import React, { useState } from 'react';
+import './AnalyzeResultPage.css';
 import Navbar from '../components/Navbar';
 
-const AnalyzeResultPage = ({ sampleImage, analysisData }) => {
+const AnalyzeResultPage = ({ sampleImage }) => {
   const defaultImage = '/sample_darkpattern.png';
+  const [activeTab, setActiveTab] = useState('분석률');
 
-  // 예시 데이터 (샘플 이미지를 기준으로 하드코딩된 분석 결과)
   const result = {
     overall: 92,
     types: [
@@ -47,83 +48,89 @@ const AnalyzeResultPage = ({ sampleImage, analysisData }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="result-container">
       <Navbar />
-      <div className="max-w-6xl mx-auto px-6 py-12">
-        <h1 className="text-2xl font-bold text-center mb-4">분석이 완료되었습니다!</h1>
-        <p className="text-center text-gray-600 mb-6">아래에서 분석 결과를 확인해보세요.</p>
+      <div className="result-header">
+        <h1>분석이 완료되었습니다!</h1>
+        <p>아래에서 분석 결과를 확인해보세요.</p>
+        <button onClick={() => window.location.href = '/analyze'}>
+          다른 이미지 분석하기
+        </button>
+      </div>
 
-        <div className="text-center mb-10">
+      <div className="result-tabs">
+        {['분석률', '탐지된 요소', '관련 뉴스'].map(tab => (
           <button
-            onClick={() => window.location.href = '/analyze'}
-            className="bg-gray-800 text-white px-5 py-2 rounded hover:bg-gray-700"
+            key={tab}
+            className={activeTab === tab ? 'active' : ''}
+            onClick={() => setActiveTab(tab)}
           >
-            다른 이미지 분석하기
+            {tab}
           </button>
-        </div>
+        ))}
+      </div>
 
-        <div className="flex justify-center mb-8">
+      <div className="result-grid">
+        <div className="result-image-section">
           <img
             src={sampleImage || defaultImage}
             alt="업로드된 이미지"
-            className="w-96 border rounded shadow"
+            style={{ width: '100%', borderRadius: '1rem' }}
           />
         </div>
 
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">전체 다크패턴 탐지율</h2>
-          <div className="w-full bg-gray-200 rounded-full h-4">
-            <div
-              className="bg-red-500 h-4 rounded-full text-right pr-2 text-white text-xs"
-              style={{ width: `${result.overall}%` }}
-            >
-              {result.overall}%
-            </div>
-          </div>
-        </div>
-
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">유형별 다크패턴 탐지율</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {result.types.map((t) => (
-              <div key={t.label} className="bg-white p-4 rounded shadow text-center">
-                <p className="font-semibold">{t.label}</p>
-                <p className="text-gray-700">{t.level}</p>
-                <p className="text-xl font-bold">{t.value}%</p>
+        <div className="result-content-section">
+          {activeTab === '분석률' && (
+            <>
+              <div className="result-card">
+                <h2>전체 다크패턴 탐지율</h2>
+                <div className="result-bar">
+                  <div className="result-bar-fill" style={{ width: `${result.overall}%` }}></div>
+                </div>
               </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">탐지된 다크패턴 요소</h2>
-          {result.elements.map((el, i) => (
-            <div key={i} className="bg-white p-4 mb-4 rounded shadow">
-              <div className="flex justify-between">
-                <p className="font-bold">{el.type}</p>
-                <p className="text-sm text-red-500">{el.level} 위험도 · {el.score}%</p>
-              </div>
-              <p className="mt-2">{el.content}</p>
-              <p className="text-sm text-gray-600 mt-1">유형: {el.category}</p>
-              <div className="text-sm mt-2 space-y-1">
-                {el.law.map((line, idx) => (
-                  <p key={idx}>• {line}</p>
+              <div className="result-card">
+                <h2>유형별 다크패턴 탐지율</h2>
+                {result.types.map((t, i) => (
+                  <div key={i} className="result-tags">
+                    <span>{t.label}</span>
+                    <span>{t.level}</span>
+                    <span>{t.value}%</span>
+                  </div>
                 ))}
               </div>
-            </div>
-          ))}
-        </div>
+            </>
+          )}
 
-        <div>
-          <h2 className="text-xl font-semibold mb-4">다크패턴 관련 뉴스</h2>
-          {result.news.map((n, i) => (
-            <div key={i} className="bg-white p-4 mb-4 rounded shadow">
-              <a href={n.url} target="_blank" rel="noreferrer" className="text-blue-600 font-medium">
-                {n.title}
-              </a>
-              <p className="text-sm text-gray-700">{n.summary}</p>
+          {activeTab === '탐지된 요소' && (
+            <div className="result-card">
+              <h2>탐지된 다크패턴 요소</h2>
+              {result.elements.map((el, i) => (
+                <div key={i} style={{ marginBottom: '1rem' }}>
+                  <div className="result-tags">
+                    <span>{el.type}</span>
+                    <span>{el.level} 위험도 · {el.score}%</span>
+                  </div>
+                  <p>{el.content}</p>
+                  <p style={{ fontSize: '0.9rem', color: '#666' }}>유형: {el.category}</p>
+                  {el.law.map((line, idx) => (
+                    <p key={idx} style={{ fontSize: '0.85rem' }}>• {line}</p>
+                  ))}
+                </div>
+              ))}
             </div>
-          ))}
+          )}
+
+          {activeTab === '관련 뉴스' && (
+            <div className="result-news">
+              <h2>다크패턴 관련 뉴스</h2>
+              {result.news.map((n, i) => (
+                <div key={i} style={{ marginBottom: '1.25rem' }}>
+                  <a href={n.url} target="_blank" rel="noreferrer">{n.title}</a>
+                  <p>{n.summary}</p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -1,20 +1,37 @@
+// components/Navbar.jsx
 import React from 'react';
-import { Link } from 'react-router-dom';
-import './Navbar.css'; // 스타일 분리
+import { useNavigate } from 'react-router-dom';
+import './Navbar.css';
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const user = JSON.parse(sessionStorage.getItem('user'));
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('user');
+    navigate('/login');
+  };
+
   return (
     <nav className="navbar">
-      <div className="navbar-logo">
-        <Link to="/">DARKPATTERN DETECTION</Link>
+      <div className="navbar-logo" onClick={() => navigate('/')}>
+        DARKPATTERN DETECTION
       </div>
-      <ul className="navbar-menu">
-        <li><Link to="/analyze">다크패턴 분석하기</Link></li>
-        <li><Link to="/notice">공지사항</Link></li>
-        <li><Link to="/mypage">마이페이지</Link></li>
-      </ul>
-      <div className="navbar-login">
-        <Link to="/login" className="login-btn">로그인/회원가입</Link>
+      <div className="navbar-links">
+        <button onClick={() => navigate('/analyze')}>다크패턴 분석하기</button>
+        <button onClick={() => navigate('/info')}>다크패턴 알아보기</button>
+        <button onClick={() => navigate('/news')}>관련 뉴스</button>
+        <button onClick={() => navigate('/history')}>나의 분석기록</button>
+      </div>
+      <div className="navbar-auth">
+        {user ? (
+          <>
+            <span className="user-name">{user.name}</span>
+            <button onClick={handleLogout} className="logout-btn">로그아웃</button>
+          </>
+        ) : (
+          <button onClick={() => navigate('/login')}>로그인/회원가입</button>
+        )}
       </div>
     </nav>
   );
