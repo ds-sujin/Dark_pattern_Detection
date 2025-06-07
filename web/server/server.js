@@ -8,8 +8,8 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const { MongoClient } = require('mongodb');
 const mongoose = require('mongoose');
-
 const app = express();
+
 console.log('[전체 환경 변수]', process.env);
 
 // CORS 설정
@@ -21,7 +21,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ✅ MongoClient로 Users 컬렉션 연결 (Atlas DB 사용)
+// MongoClient로 사용자 관련 연결
 const client = new MongoClient(process.env.MONGODB_URL);
 let usersCollection;
 
@@ -37,7 +37,7 @@ async function connectDB() {
 }
 connectDB();
 
-// ✅ Mongoose로 이미지 업로드 관련 연결 (Atlas DB 사용)
+// Mongoose로 Image 모델용 연결 (불필요한 옵션 제거)
 mongoose.connect(process.env.MONGODB_URL, {
   dbName: process.env.DB_NAME
 }).then(() => {
@@ -49,8 +49,15 @@ mongoose.connect(process.env.MONGODB_URL, {
 // 라우터 등록
 const authRoute = require('./routes/auth');
 const uploadRoute = require('./routes/upload');
+const NewsuploadRoute = require('./routes/image_upload');
+const newsRoutes = require('./routes/news');
+const quizRoutes = require('./routes/quiz');
+
 app.use('/api/auth', authRoute);
 app.use('/upload', uploadRoute);
+app.use('/news_uploads', NewsuploadRoute)
+app.use('/news', newsRoutes);
+app.use('/quiz', quizRoutes);
 
 // 회원가입 API
 app.post('/api/register', async (req, res) => {
