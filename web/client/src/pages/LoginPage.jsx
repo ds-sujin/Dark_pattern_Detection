@@ -32,6 +32,7 @@ const LoginPage = () => {
 
       if (data.success) {
         alert('로그인 성공!');
+        localStorage.setItem('token', 'dummy-token'); 
         sessionStorage.setItem('user', JSON.stringify(data.user)); // 또는 localStorage.setItem(...)
         navigate('/main');
       } else {
