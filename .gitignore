@@ -5,7 +5,7 @@ venv/
 
 # VSCode 설정 파일
 .vscode/
-
+node_modules
 # Python 캐시 및 임시 파일
 __pycache__/
 *.py[cod]
