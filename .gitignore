@@ -2,7 +2,7 @@
 .venv/
 env/
 venv/
-
+node_modules
 # VSCode 설정 파일
 .vscode/
 
@@ -72,3 +72,5 @@ next-env.d.ts
 # login_backend/ 폴더 안의 db.json
 login_backend/db.json
 .DS_Store
+
+.env
