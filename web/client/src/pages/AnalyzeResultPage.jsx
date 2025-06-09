@@ -6,50 +6,77 @@ import Navbar from '../components/Navbar';
 const AnalyzeResultPage = () => {
   const location = useLocation();
   const sampleImage = location.state?.image || '/sample_darkpattern.png';
+  const fileName = location.state?.fileName || '';
   const ocrText = location.state?.ocrText || '';
-  const isSecondSample = location.state?.isSecondSample || false;
+
+  const isSample2 = fileName === 'sample_darkpattern2.png';
 
   const [activeTab, setActiveTab] = useState('분석률');
 
-  // 결과 분기 처리
-  const result = isSecondSample
+  const result = isSample2
     ? {
-        overall: 87,
+        overall: 85,
         types: [
-          { label: 'Sneaking', value: 85, level: '높음' },
-          { label: 'Urgency', value: 80, level: '높음' },
-          { label: 'Misdirection', value: 60, level: '보통' },
-          { label: 'Social Proof', value: 45, level: '보통' },
-          { label: 'Scarcity', value: 75, level: '높음' },
-          { label: 'Obstruction', value: 20, level: '낮음' },
-          { label: 'Forced Action', value: 30, level: '낮음' },
+          { label: 'Sneaking', value: 40, level: '보통' },
+          { label: 'Urgency', value: 66, level: '보통' },
+          { label: 'Misdirection', value: 89, level: '높음' },
+          { label: 'Social Proof', value: 20, level: '낮음' },
+          { label: 'Scarcity', value: 50, level: '보통' },
+          { label: 'Obstruction', value: 62, level: '보통' },
+          { label: 'Forced Action', value: 87, level: '높음' },
         ],
         elements: [
           {
             type: '텍스트',
             content: '2개월 무료 이용권 받고 유지하기',
-            category: 'Urgency',
+            category: 'Forced Action',
             level: '위험',
-            score: 85,
+            score: 87,
             law: [
-              '무료 혜택 유도로 인해 소비자의 자율적 선택을 방해할 수 있습니다.',
-              '무료 이후 자동 결제가 이루어지는 경우 명확한 고지가 필요합니다.',
+              '전자상거래 등에서의 소비자보호에 관한 법률 제17조: 청약 철회 및 해지 용이성 보장',
+              '공정거래위원회 고시 「전자상거래 등에서의 소비자보호 지침」 제8조: 부당한 거래유도 금지',
             ],
           },
           {
             type: '버튼',
-            content: '포기하고 해지 계속하기',
-            category: 'Forced Action',
-            level: '주의',
-            score: 60,
-            law: ['해지를 어렵게 만들거나 복잡하게 유도하는 설계는 다크패턴으로 간주될 수 있습니다.'],
+            content: '무료 이용권 받고 유지하기',
+            category: 'Misdirection',
+            level: '위험',
+            score: 89,
+            law: [
+              '표시·광고의 공정화에 관한 법률 제3조: 소비자를 속이거나 기만하는 표시·광고 금지',
+              '소비자기본법 제4조: 소비자의 알 권리 및 자율 선택권 보장',
+            ],
+          },
+          {
+            type: '텍스트',
+            content: '이용 중에도 해지 가능',
+            category: 'Obstruction',
+            level: '보통',
+            score: 62,
+            law: [
+              '전자상거래법 제21조: 계약 해지 제한은 부당행위에 해당할 수 있음',
+              '소비자기본법 제6조: 계약 해지 관련 고지 및 절차 명시 의무',
+            ],
           },
         ],
-        news: Array(2).fill({
-          title: '다크패턴, “무료”의 진실은?',
-          summary: '무료 체험 후 자동 결제되는 서비스를 명확히 안내하지 않아 논란이 되고 있습니다...',
-          url: 'https://www.deceptive.design/',
-        }),
+        news: [
+          {
+            title: '정기결제 유도하는 UI에 공정위 제재',
+            summary: '취소보다 유지 버튼을 강조해 소비자 선택을 왜곡한 사례 제재',
+            url: 'https://www.korea.kr/news/policyNewsView.do?newsId=148902313',
+          },
+          {
+            title: '무료 이용권 종료 후 자동결제, 공정위 과징금 부과',
+            summary: '소비자가 명확히 인지하지 못한 자동결제 유도에 대한 제재',
+            url: 'https://www.ftc.go.kr/www/cop/bbs/selectBoardArticle.do?key=1053&bbsId=BBSMSTR_000000002461&nttId=88991',
+          },
+          {
+            title: '다크패턴 방지 위해 해지 UI 규제 강화된다',
+            summary: '해지 버튼 숨기거나 흐릿하게 표시한 사례 중심으로 감시 예정',
+            url: 'https://cucs.or.kr/?p=15006',
+          },
+        ],
       }
     : {
         overall: 92,
@@ -70,8 +97,8 @@ const AnalyzeResultPage = () => {
             level: '위험',
             score: 91,
             law: [
-              '법령을 위반할 가능성이 있습니다. 특정 내용(공정거래법 등)에 대한 정보가 명확하지 않습니다.',
-              '허위과장된 정보로 소비자를 유도할 우려가 있습니다.',
+              '전자상거래법 제21조: 소비자 기만 금지',
+              '표시·광고의 공정화에 관한 법률 제3조: 기만적 광고 금지',
             ],
           },
           {
@@ -80,15 +107,29 @@ const AnalyzeResultPage = () => {
             category: 'Scarcity',
             level: '위험',
             score: 92,
-            law: ['해당 텍스트는 시간에 대한 인지왜곡을 일으킬 수 있습니다.'],
+            law: [
+              '전자상거래법 제21조: 시간에 대한 인지왜곡 금지',
+              '소비자기본법 제4조: 알권리 침해 금지',
+            ],
           },
         ],
-        news: Array(3).fill({
-          title: 'ICO & Emailmovers Limited',
-          summary:
-            '개인정보 불법유통 문제로 형사처벌이 구체적이지 않으며, 제3자 수사자료 확보에 현실적 한계가 있습니다...',
-          url: 'https://www.deceptive.design/',
-        }),
+        news: [
+          {
+            title: '“오늘만 할인” 문구로 소비자 유도, 과태료 부과',
+            summary: '소비자를 급하게 유도하는 문구 사용에 대해 공정위가 과징금 부과',
+            url: 'https://www.korea.kr/news/policyNewsView.do?newsId=148902313',
+          },
+          {
+            title: '“한정 수량” 허위 표시, 온라인몰 제재',
+            summary: '수량 제한 허위로 표시한 온라인 쇼핑몰 다수 적발',
+            url: 'https://www.ftc.go.kr/news/online_deceptive_cases',
+          },
+          {
+            title: '공정위, 다크패턴 감시 시스템 강화 계획 발표',
+            summary: '다크패턴 방지를 위한 소비자 감시 체계 확대 예정',
+            url: 'https://www.consumer.go.kr/news/press',
+          },
+        ],
       };
 
   return (
@@ -103,7 +144,7 @@ const AnalyzeResultPage = () => {
       </div>
 
       <div className="result-tabs">
-        {['분석률', '탐지된 요소', '관련 뉴스'].map(tab => (
+        {['분석률', '탐지된 요소', '관련 뉴스'].map((tab) => (
           <button
             key={tab}
             className={activeTab === tab ? 'active' : ''}
@@ -175,15 +216,15 @@ const AnalyzeResultPage = () => {
               ))}
             </div>
           )}
+        </div>
 
-          <div className="ocr-box">
-            <h3>OCR 추출 결과</h3>
-            <textarea
-              className="ocr-textarea"
-              value={ocrText}
-              readOnly
-            />
-          </div>
+        <div className="ocr-box">
+          <h3>OCR 추출 결과</h3>
+          <textarea
+            className="ocr-textarea"
+            value={ocrText}
+            readOnly
+          />
         </div>
       </div>
     </div>
