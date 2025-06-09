@@ -1,26 +1,60 @@
-import './AnalyzePage.css';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './AnalyzePage.css';
 import Navbar from '../components/Navbar';
 
 const AnalyzePage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const navigate = useNavigate();
 
-  const handleImageUpload = (event) => {
+  const handleImageUpload = async (event) => {
     const file = event.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setSelectedImage({ image: imageUrl, fileName: file.name, isSample: false });
+    if (!file) return;
 
-      // 결과 페이지로 이동
-      navigate('/analyze/result', {
-        state: {
-          image: imageUrl,
-          fileName: file.name,
-          isSample: false,
-        },
+    // 사용자 정보 가져오기
+    const user = sessionStorage.getItem('user')
+      ? JSON.parse(sessionStorage.getItem('user'))
+      : { id: '', name: '' };
+
+    // FormData 구성
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('user_id', user.id);
+    formData.append('user_name', user.name);
+
+    try {
+      const response = await fetch('http://localhost:5000/upload', {
+        method: 'POST',
+        body: formData,
       });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        const imageUrl = URL.createObjectURL(file);
+        const fileName = file.name;
+
+        setSelectedImage({ image: imageUrl, fileName, isSample: false });
+
+        // sample_darkpattern2.png 여부 체크
+        const isSecondSample = fileName === 'sample_darkpattern2.png';
+
+        // 결과 페이지로 이동
+        navigate('/analyze/result', {
+          state: {
+            image: imageUrl,
+            fileName,
+            isSample: false,
+            ocrText: result.text || '',
+            isSecondSample, // ✅ 플래그 전달
+          },
+        });
+      } else {
+        alert('업로드 실패: ' + result.error);
+      }
+    } catch (error) {
+      console.error(error);
+      alert('이미지 업로드 중 오류 발생');
     }
   };
 
@@ -39,6 +73,8 @@ const AnalyzePage = () => {
         image: sampleImage,
         fileName: sampleFileName,
         isSample: true,
+        ocrText: '', // 샘플은 OCR 없음
+        isSecondSample: false, // 기본 샘플 이미지
       },
     });
   };
