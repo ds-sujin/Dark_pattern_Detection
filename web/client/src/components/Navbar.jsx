@@ -17,7 +17,7 @@ const Navbar = () => {
         <li><Link to="/analyze">다크패턴 분석하기</Link></li>
         <li><Link to="/learn">다크패턴 알아보기</Link></li>
         <li><Link to="/news">관련 뉴스</Link></li>
-        <li><Link to="/history">나의 분석기록</Link></li>
+        <li><Link to="/quiz">다크패턴 퀴즈</Link></li>
       </ul>
       <div className="navbar-login">
         <Link to="/login" className="login-btn">로그인/회원가입</Link>
