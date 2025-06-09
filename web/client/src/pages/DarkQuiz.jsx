@@ -16,28 +16,31 @@ const quizData = [
 상황은 Scarcity 유형의 세부유형인 Low-stock Messages(낮은 재고 메시지)입니다. 해당 경우에는 사용자에게 제품의 수량이 제한적임을 알리지만 재고가 한정적이거나 부족하다고만 표시하고 정확한 수량 표시하지 않는 경우를 의미합니다.`
   },
   {
-    question: "문제 2",
+    question: "Q. 무료 체험 기간이 끝나기 전에 서비스에서 사용자에게 구독 전환 안내를 명확히 제공하고, 해지 방법도 쉽게 설명되어 있다. 이건 Hidden Subscription 다크패턴의 사례에 해당한다.",
     options: [ { text: "네", correct: false }, { text: "아니오", correct: true } ],
-    hint: "힌트 2"
+    hint: "Hidden Subcription 다크패턴은 사용자에게 구독 전환 사실을 숨기거나, 해지 절차를 어렵게 만드는 경우를 말합니다.",
+    explanation : '이 사례는 Hidden Subscription 다크패턴에 해당하지 않습니다. \nHidden Subscription은 일반적으로 사용자에게 구독 전환 사실을 숨기거나, 해지 절차를 어렵게 만드는 경우를 말합니다. \n\n반면 이 문제에서는 \n• 서비스가 무료 체험이 끝나기 전에 구독 전환을 명확히 알림 \n• 해지 방법도 쉽게 안내함 \n따라서 사용자를 속이거나 방해하는 행위가 없기 때문에 다크패턴이 아닙니다.'
   },
   {
-    question: "문제 3",
+    question: "Q. 계정 탈퇴를 하려면 설정 > 기타 > 계정관리 > 고객센터 > 메일 문의 > 해지 신청 링크로 들어가야만 한다. 이 경우에 해당하는 다크패턴 유형은 무엇인가요?",
     image: "none",
-    options: [ { text: "정답", correct: true }, { text: "오답", correct: false } ],
-    hint: "힌트 3"
+    options: [ { text: "A. Sneaking (몰래 끼워넣기)", correct: false }, { text: "B. Urgency (긴급성 부여)", correct: false }, { text: "C. Scarcity (인위적 희소성)", correct: false },{ text: "D. Obstruction (방해하기)", correct: true } ],
+    hint: "사용자가 원하는 행동(탈퇴)을 하는 데 과도한 단계와 복잡한 경로를 요구하는 경우에요.",
+    explanation:'계정 탈퇴를 하려면 여러 단계의 경로를 거쳐야 하는 이 사례는, 사용자가 쉽게 탈퇴하지 못하도록 절차를 복잡하게 만든 Obstruction(방해) 유형의 다크패턴입니다. \n특히 ‘Hard to Cancel’ 세부 유형에 해당하며, 이는 이용자가 서비스를 원활히 해지하지 못하게 의도적으로 불편함을 유도하는 방식입니다.'
   },
   {
-    question: "문제 4",
-    image: "/quiz/quiz-lv4.svg",
-    options: [ { text: "선택지 A", correct: false }, { text: "선택지 B", correct: true } ],
-    hint: "힌트 4"
+    question: "Q. 다음 중 ‘몰래 장바구니 추가(Sneak into Basket)’에 해당하는 사례는 무엇인가요?",
+    image: "none",
+    options: [ { text: "A. 사용자가 제품을 클릭하자마자 자동 결제되는 구조", correct: false }, { text: "B. 사용자가 상품을 고르지도 않았는데, 결제 시 추가 상품이 포함돼 있는 경우", correct: true }, { text: "C. 로그인 없이 상품을 볼 수 없는 화면", correct: false },{ text: "D. 사용자가 후기를 쓰지 않으면 주문 완료가 되지 않는 구조", correct: false } ],
+    hint: "몰래 장바구니 추가란, 사용자가 선택하지 않은 상품이나 옵션이 결제 단계에 자동으로 포함되는 다크패턴입니다.",
+    explanation:'‘몰래 장바구니 추가(Sneak into Basket)’는 사용자가 직접 고르지 않았는데도, 결제 시 추가 상품이나 옵션이 자동 포함되는 구조를 말합니다. \n이는 사용자의 의도와 다르게 비용이 늘어나게 만들며, 소비자가 모르게 결제를 유도하는 전형적인 다크패턴입니다.'
   },
   {
-    question: "문제 5",
-    image: "/quiz/quiz-lv5.svg",
-    options: [ { text: "True", correct: true }, { text: "False", correct: false } ],
-    hint: "힌트 5",
-    explanation: '“품절임박” 문구와 “구매 가능 수량”은 Scarcity(희소성) 유형의 다크패턴입니다.'
+    question: "Q. 다음 중 ‘Misdirection’ 다크패턴 유형에 속하는 상황은 무엇인가요?",
+    image: "none",
+    options: [ { text: "A. ‘곧 마감됩니다’라는 거짓 메시지로 구매를 유도", correct: false }, { text: "B. ‘아니요, 할인은 필요 없어요’처럼 부정적인 선택지를 제시", correct: false }, { text: "C. 마케팅 수신 동의를 하지 않으면 사이트 접근이 차단", correct: false }, { text: "D. 리뷰 출처를 공개하지 않은 홍보 문구 사용", correct: false } ],
+    hint: "Misdirection은 사용자의 주의를 다른 곳으로 돌리거나, 원하는 선택지를 덜 보이게 하거나 불쾌하게 표현해 사용자의 선택을 왜곡하는 방식입니다.",
+    explanation: '“‘아니요, 할인은 필요 없어요’처럼 부정적 감정을 자극하는 문구는 사용자가 선택을 망설이게 만들며, 주의를 돌리거나 심리적 압박을 주는 Misdirection(주의 분산) 유형의 다크패턴입니다. \n이는 감정적으로 불쾌하거나 수치심을 느끼게 만들어 의도하지 않은 선택을 하도록 유도하는 방식입니다.'
   }
 ];
 
@@ -134,7 +137,10 @@ function DarkQuiz() {
         <h3 className={answers[currentLevel - 1] ? 'correct' : 'incorrect'}>
           {answers[currentLevel - 1] ? '정답입니다!' : '오답입니다!'}
         </h3>
-        <p><strong>정답 :</strong> {quizData[currentLevel - 1].options.find(o => o.correct).text}</p>
+        <p>
+        <strong>정답 :</strong>{' '}
+        {quizData[currentLevel - 1]?.options.find((o) => o.correct)?.text ?? '정답 없음'}
+        </p>
         <pre className="explanation-text">{quizData[currentLevel - 1].explanation}</pre>
         {currentLevel < 5 ? (
             <button
@@ -151,8 +157,10 @@ function DarkQuiz() {
             <button
                 className="next-button"
                 onClick={() => {
-                setShowExplanation(false);
-                setShowResult(true);
+                    setShowExplanation(false);
+                    if (answers.every(a => a !== null)) {
+                    setShowResult(true);
+                    }
                 }}
             >
                 나의 결과 보기 &nbsp; 📊
