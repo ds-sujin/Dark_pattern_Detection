@@ -15,11 +15,11 @@ const RegisterPage = () => {
 
   const handleRegister = async () => {
     if (!name || !id || !password || !confirmPassword) {
-      return setError('모든 필드를 입력해주세요.');
+      return setError('모든 필드를 입력해 주세요.');
     }
 
     if (!validateEmail(id)) {
-      return setError('유효한 이메일 주소를 입력해주세요.');
+      return setError('유효한 이메일 주소를 입력해 주세요.');
     }
 
     if (!validatePassword(password)) {
@@ -31,7 +31,7 @@ const RegisterPage = () => {
     }
 
     if (!agree) {
-      return setError('개인정보 수집 및 이용에 동의해주세요.');
+      return setError('개인정보 수집 및 이용에 동의해 주세요.');
     }
 
     try {
@@ -60,29 +60,29 @@ const RegisterPage = () => {
       <div className="register-container">
         <div className="register-form">
           <h2>회원가입</h2>
-          <p>회원정보작성과 약관에 동의해주세요.</p>
+          <p>회원 정보 작성과 약관에 동의해 주세요.</p>
 
           <input
             type="text"
-            placeholder="이름을 입력해주세요."
+            placeholder="이름을 입력해 주세요."
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
           <input
             type="email"
-            placeholder="아이디로 사용할 이메일 주소를 입력해주세요."
+            placeholder="아이디로 사용할 이메일 주소를 입력해 주세요."
             value={id}
             onChange={(e) => setId(e.target.value)}
           />
           <input
             type="password"
-            placeholder="비밀번호를 입력해주세요."
+            placeholder="비밀번호를 입력해 주세요."
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
           <input
             type="password"
-            placeholder="비밀번호를 다시 입력해주세요."
+            placeholder="비밀번호를 다시 입력해 주세요."
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
