@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './NewsPage.css';
 import Footer from '../components/Footer';
+import Navbar from '../components/Navbar';
 
 function NewsPage() { 
   const [newsList, setNewsList] = useState([]);
@@ -91,14 +92,24 @@ function NewsPage() {
   });
 
   return (
-    <div className="page-container">    
+    <div className="page-container">
+      <Navbar></Navbar>   
+       <div className="news-header-video">
+        <video
+          className="news-header-video-bg"
+          src="/darkpattern_news_banner2.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+        />
+        <div className="news-header-overlay" />
+        <div className="news-header-text">
+          <h1>관련 뉴스</h1>
+          <p>국내, 해외의 다크패턴 관련 뉴스를 빠르게 보여드립니다.</p>
+        </div>
+      </div> 
     <div className="news-container">
-      <div className="news-header">
-        <img src="/iconPaper.svg" alt="뉴스 아이콘" />
-        <h1>관련 뉴스</h1>
-        <p>국내, 해외의 다크패턴 관련 뉴스를 빠르게 보여드립니다.</p>
-      </div>
-
       <div className="news-toolbar">
         <p>총 {newsList.length.toLocaleString()}개</p>
         <div className="news-toolbar-right">
