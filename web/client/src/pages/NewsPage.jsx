@@ -24,22 +24,22 @@ function NewsPage() {
   }, []);
 
   // Google Drive 이미지 URL 변환 함수
-  function getImageUrl(driveUrl) {
-    if (!driveUrl) return ''; // 혹시 빈 문자열일 경우 대비
+  // function getImageUrl(driveUrl) {
+  //   if (!driveUrl) return ''; // 혹시 빈 문자열일 경우 대비
 
-    // 1) Google Drive URL에서 파일 ID 추출
-    const regex = /\/d\/([a-zA-Z0-9_-]+)/;
-    const match = driveUrl.match(regex);
+  //   // 1) Google Drive URL에서 파일 ID 추출
+  //   const regex = /\/d\/([a-zA-Z0-9_-]+)/;
+  //   const match = driveUrl.match(regex);
 
-    if (match && match[1]) {
-      const fileId = match[1];
-      // 2) 이미지 src에 embed 형태로 반환
-      return `https://drive.google.com/uc?export=view&id=${fileId}`;
-    }
+  //   if (match && match[1]) {
+  //     const fileId = match[1];
+  //     // 2) 이미지 src에 embed 형태로 반환
+  //     return `https://drive.google.com/uc?export=view&id=${fileId}`;
+  //   }
 
-    // 3) 혹시 다른 형태이거나 일반 URL이면 그대로 반환
-    return driveUrl;
-  }
+  //   // 3) 혹시 다른 형태이거나 일반 URL이면 그대로 반환
+  //   return driveUrl;
+  // }
 
   // 필터링
   const filteredNews = newsList.filter(news =>
@@ -87,7 +87,7 @@ function NewsPage() {
 
         {/* 상단 3개 카드 형태 */}
         <div className="news-card-grid">
-          {sortedNews.slice(0, 3).map(news => (
+          {sortedNews.slice(0, 3).map((news, index) => (
             <a
               className="news-card"
               key={news._id}
@@ -96,7 +96,10 @@ function NewsPage() {
               rel="noopener noreferrer"
               style={{ textDecoration: 'none', color: 'inherit' }}
             >
-              <img src={getImageUrl(news.img)} alt={news.title} />
+              <img
+                src={`/darknews${index + 1}.jpg`} 
+                alt={news.title}
+              />
               <div className="news-card-content">
                 <p className="news-company">{news.company}</p>
                 <h3 className="news-title">{news.title}</h3>
@@ -107,7 +110,6 @@ function NewsPage() {
             </a>
           ))}
         </div>
-
         {/* 하단 뉴스 리스트 */}
         <div className="news-list">
           {sortedNews.slice(3).map(news => (
