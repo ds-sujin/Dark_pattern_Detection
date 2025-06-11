@@ -1,3 +1,4 @@
+
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
@@ -53,21 +54,29 @@ router.post('/', upload.single('picture'), async (req, res) => {
 // GET: 레벨별 퀴즈 조회
 // 전체 조회: GET http://localhost:5000/quiz
 // 레벨별 조회: GET http://localhost:5000/quiz?level=1
+// GET: 퀴즈 조회 (레벨별 랜덤 1개씩)
 router.get('/', async (req, res) => {
   try {
-    const { level } = req.query;
-    let filter = {};
+    const levels = [1, 2, 3, 4, 5];
+    const quizList = [];
 
-    if (level) {
-      filter.level = parseInt(level, 10);
+    for (const level of levels) {
+      const quizzes = await Quiz.find({ level });
+      if (quizzes.length > 0) {
+        const randomIndex = Math.floor(Math.random() * quizzes.length);
+        quizList.push(quizzes[randomIndex]);
+      }
     }
 
-    const quizList = await Quiz.find(filter).sort({ level: 1 });
+    // level 순으로 정렬 (1~5)
+    quizList.sort((a, b) => a.level - b.level);
+
     res.status(200).json({ success: true, data: quizList });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to fetch quiz' });
   }
 });
+
 
 module.exports = router;
