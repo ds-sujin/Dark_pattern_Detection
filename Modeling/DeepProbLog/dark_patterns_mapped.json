@@ -1,0 +1,32 @@
+{
+  "misdirection": [
+    "comparison_prevention",
+    "confirmshaming",
+    "Disguised_ads",
+    "Trick_wording",
+    "Visual_interference"
+  ],
+  "scarcity": [
+    "Fake_scarcity"
+  ],
+  "social_proof": [
+    "Fake_social_proof"
+  ],
+  "urgency": [
+    "Fake_urgency"
+  ],
+  "forced_action": [
+    "Forced_action",
+    "Nagging"
+  ],
+  "obstruction": [
+    "Hard_to_cancel",
+    "Obstruction"
+  ],
+  "sneaking": [
+    "Hidden_Costs",
+    "Hidden_subscription",
+    "Preselection",
+    "Sneaking"
+  ]
+}

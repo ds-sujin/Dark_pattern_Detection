@@ -1,0 +1,37 @@
+{
+  "misdirection": [
+    "obfuscate_comparison_details(ui_element, product_details)",
+    "use_confirmshaming_language(ui_element, opt_out_button)",
+    "disguise_ad_as_content(ui_element, ad_content)"
+  ],
+  "scarcity": [
+    "display_fake_stock_counter(ui_element, stock_counter)",
+    "inject_misleading_demand_message(ui_element, demand_message)",
+    "simulate_high_demand(ui_element, sales_counter)"
+  ],
+  "social_proof": [
+    "generate_fake_endorsement(endorsement, location)",
+    "inject_random_time(time)",
+    "display_activity_message_overlay(message, item)"
+  ],
+  "urgency": [
+    "inject_fake_timer(ui_element, animation_state)",
+    "reset_countdown_timer(ui_element, default_configuration)",
+    "display_urgency_message(ui_element, prominence_level)"
+  ],
+  "forced_action": [
+    "force_user_action(ui_element, desired_action)",
+    "hide_opt_out(ui_element, opt_out_link)",
+    "repeat_request(ui_element, request_message)"
+  ],
+  "obstruction": [
+    "hide_cancellation_option(service)",
+    "require_customer_service_interaction(service, action)",
+    "create_obstacle_for_privacy_settings(service, setting)"
+  ],
+  "sneaking": [
+    "hide_additional_costs(ui_element, purchase_process)",
+    "create_hidden_subscription(ui_element, user_action)",
+    "preselect_option(ui_element, default_option)"
+  ]
+}
