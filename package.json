@@ -1,13 +1,15 @@
 {
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.6",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.6"
+  },
   "dependencies": {
-    "@google-cloud/vision": "^5.1.0",
-    "bcrypt": "^5.1.1",
-    "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0",
-    "mongodb": "^6.16.0",
-    "mongoose": "^8.15.0",
-    "multer": "^2.0.0",
-    "tesseract.js": "^2.1.5"
+    "aos": "^2.3.4",
+    "axios": "^1.9.0",
+    "framer-motion": "^12.11.3",
+    "lottie-react": "^2.4.1",
+    "react-type-animation": "^3.2.0"
   }
 }

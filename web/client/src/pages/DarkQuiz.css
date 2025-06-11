@@ -1,0 +1,350 @@
+.quiz-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 4rem;            /* 좌우 여백 추가 */
+  gap: 2rem;                     /* 좌우 영역 간격 */
+  font-family: 'Pretendard', sans-serif;
+}
+
+.quizpage-container{
+    background-color: #ffffff;
+;
+}
+
+/*퀴즈*/
+.quiz-layout {
+  display: flex;
+  gap: 60px;
+}
+
+.quiz-container h2{
+  font-size: 2rem;
+  margin: 0rem;
+  color: #000000;
+}
+
+.quiz-container p{
+  font-size: 1.125rem;
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+  color: #333;
+
+}
+
+.quiz-start {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  height: 100%; /* 또는 부모의 높이에 맞게 */
+  text-align: center;
+  gap: 20px;
+}
+
+/*좌측의 레벨*/
+.quiz-levels {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 3rem;
+  border-radius: 20px;
+  background-image: url('/quiz/quiz-background.svg'); /* ← 여기에 배경 나무 이미지 */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+  cursor: pointer;
+  max-height: 490px;
+}
+
+level-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid transparent;
+}
+
+.quiz-level img {
+  width: 64px;
+  height: 64px;
+}
+
+.quiz-level.active .level-img {
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 6px #ffffff;
+  border-radius: 999px;
+}
+
+.status-icon {
+  position: absolute;
+  bottom: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+}
+
+
+
+.quiz-box {
+  width: 100%;
+  max-width: 480px;
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.quiz-level-label {
+  font-size: 0.9rem;
+  color: #888;
+  margin-bottom: 0.5rem;
+}
+
+.quiz-question-text {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.quiz-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.quiz-option-btn:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.hint-button {
+  border: 1px solid #ccc;
+  background: white;
+  color: #444;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.quiz-hint {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  background: #f9f9f9;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #ccc;
+}
+
+/*문제*/
+.quiz-question-area {
+  background-color: #f8f9fa;
+  flex-grow: 1;
+  border-radius: 20px;
+  padding: 2.5rem 3rem;
+}
+
+.quiz-question h3{
+    display: inline-block;            /* 인라인 크기 유지 */
+  background-color: #ffdada;        /* 배경 회색 */
+  padding: 0.3rem 0.6rem;           /* 내부 여백 */
+  border-radius: 4px;               /* 모서리 둥글게 */
+  font-weight: 500;
+  font-size: 1rem;
+  margin-top: 0rem;
+  margin-bottom: 0.75rem;
+  color: #ED1F1F;
+}
+
+.quiz-question p{
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.5;
+    margin-top: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.quiz-image-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.quiz-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;       /* 버튼을 가로 중앙 정렬 */
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+
+.quiz-option-btn {
+  width: 58%;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  border-radius: 10px;
+  border: 1px solid #bdbdbd;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.quiz-option-btn:hover:not(:disabled) {
+  background-color: #E7F8F8;
+  border: 1px solid #0BBBC5;
+  color: #1a1a1a;
+}
+
+.quiz-option-btn:disabled {
+  cursor: default;
+  opacity: 0.9;
+}
+
+.quiz-option-btn.correct {
+  background-color: #eafcff;
+  border-color: #00c8d7;
+}
+
+.quiz-option-btn.incorrect {
+  background-color: #fff6f6;
+  border-color: #ff9999;
+}
+
+/*힌트버튼*/
+.quiz-hint-wrapper {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.hint-button {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.quiz-hint {
+  font-size: 0.9rem;
+  padding: 0rem 1rem;
+  border-radius: 6px;
+  border: none;
+  color: #068EA5;
+}
+
+/*정답,오답화면*/
+.quiz-explanation {
+  width: 100%;
+  border-radius: 12px;
+  padding: 0rem;
+}
+
+.quiz-explanation p{
+    margin-bottom: 0.5rem;
+}
+
+.correct {
+  color: #00b4cc;
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+}
+
+.incorrect {
+  color: #e74c3c;
+  font-weight: bold;
+  font-size: 1.8rem;
+  margin-bottom: 0rem;
+}
+
+
+.explanation-text {
+  white-space: pre-wrap;
+  margin: 3rem 0rem;
+  background: #ffffff;
+  box-shadow: 0 0px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e2e2;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  font-family: 'Pretendard', sans-serif;
+}
+
+.next-button {
+  margin-top: 1.5rem;
+  background-color: black;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/*결과*/
+.quiz-result {
+  background-color: #ffffff;
+  border: 2px solid #00c8d7;
+  padding: 2rem;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.quiz-result h3 {
+  font-size: 1.8rem;
+  color: #00b4cc;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.quiz-result p {
+  font-size: 1rem;
+  margin-top: 0rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.quiz-start button{
+  margin-top: 0rem;
+  background: black;
+  color: white;
+  padding: 0.75rem 3rem;
+  border-radius: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 1.25rem;
+}
+
+.restart-button {
+  margin-top: 1.5rem;
+  background: black;
+  color: white;
+  padding: 0.75rem 3rem;
+  border-radius: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 1.25rem;
+}
