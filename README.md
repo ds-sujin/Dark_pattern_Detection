@@ -5,9 +5,9 @@ Neuro Symbolic AI기반 Dark Pattern Detection 서비스
 
 <b>팀 구성</b>
 
-- 정수진 : 사이트 크롤링 / 모델링
-- 박현우 : 모델링
-- 박소영 : 모델링
+- 정수진 : 사이트 크롤링 / 모델 서빙
+- 박현우 : BERT 모델링
+- 박소영 : OpenAI, 모델링
 - 오민진 : 디자인 / 프론트 개발
 - 박제인 : 백엔드 개발
 - 정유빈 : 뉴스 기사 크롤링 / 백엔드 개발
@@ -17,7 +17,7 @@ Neuro Symbolic AI기반 Dark Pattern Detection 서비스
 ![figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)
-![Neo4j](https://img.shields.io/badge/Neo4j-018bff?style=for-the-badge&logo=neo4j&logoColor=white)
+![nodejs](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
 ![mongoDB](	https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 
 
