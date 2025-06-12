@@ -11,12 +11,10 @@ const AnalyzePage = () => {
     const file = event.target.files[0];
     if (!file) return;
 
-    // 사용자 정보 가져오기
     const user = sessionStorage.getItem('user')
       ? JSON.parse(sessionStorage.getItem('user'))
       : { id: '', name: '' };
 
-    // FormData 구성
     const formData = new FormData();
     formData.append('image', file);
     formData.append('user_id', user.id);
@@ -26,6 +24,7 @@ const AnalyzePage = () => {
       const response = await fetch('http://localhost:5000/upload', {
         method: 'POST',
         body: formData,
+        credentials: 'include'  // ✅ 이거 꼭 있어야 해 (백에서 credentials: true 썼으니까)
       });
 
       const result = await response.json();
@@ -36,17 +35,13 @@ const AnalyzePage = () => {
 
         setSelectedImage({ image: imageUrl, fileName, isSample: false });
 
-        // sample_darkpattern2.png 여부 체크
-        const isSecondSample = fileName === 'sample_darkpattern2.png';
-
-        // 결과 페이지로 이동
         navigate('/analyze/result', {
           state: {
             image: imageUrl,
             fileName,
             isSample: false,
-            ocrText: result.text || '',
-            isSecondSample, // ✅ 플래그 전달
+            ocrText: '',         // ✅ OCR 사용 안함
+            isSecondSample: fileName === 'sample_darkpattern2.png',
           },
         });
       } else {
@@ -59,8 +54,8 @@ const AnalyzePage = () => {
   };
 
   const handleSampleImageUse = () => {
-    const sampleImage = '/sample_darkpattern.png';
-    const sampleFileName = 'sample_darkpattern.png';
+    const sampleImage = '/input_image/sample_image.png';
+    const sampleFileName = 'sample_image.png';
 
     setSelectedImage({
       image: sampleImage,
@@ -73,8 +68,8 @@ const AnalyzePage = () => {
         image: sampleImage,
         fileName: sampleFileName,
         isSample: true,
-        ocrText: '', // 샘플은 OCR 없음
-        isSecondSample: false, // 기본 샘플 이미지
+        ocrText: '',
+        isSecondSample: false,
       },
     });
   };
