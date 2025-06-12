@@ -5,11 +5,11 @@ Neuro Symbolic AI기반 Dark Pattern Detection 서비스
 
 <b>팀 구성</b>
 
-- 정수진 : 사이트 크롤링 / 모델 서빙
+- 정수진 : 사이트 크롤링 / 모델 서빙 / 백엔드 개발
 - 박현우 : BERT 모델링
 - 박소영 : OpenAI, 모델링
 - 오민진 : 디자인 / 프론트 개발
-- 박제인 : 백엔드 개발
+- 박제인 : 프론트 / 백엔드 개발
 - 정유빈 : 뉴스 기사 크롤링 / 백엔드 개발
 
 <b>사용한 툴</b>
@@ -38,6 +38,12 @@ Neuro Symbolic AI기반 Dark Pattern Detection 서비스
 📁 crawling/
 ├── laws.py           # 다크 패턴 관련 법률 정보 크롤링
 └── RM_click.py       # Roach Motel 유형 클릭 경로 요소 크롤링
+
+📁 model_server/
+│   ├── app.py # Flask로 모델 연결
+│   ├── model/ # 모델 pth 파일 업로드
+📁 server/
+│   └── input_image/
 ```
 
 # 사이드 프로젝트
