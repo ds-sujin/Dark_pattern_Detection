@@ -14,6 +14,7 @@ app.use(cors({
   credentials: true
 }));
 
+
 // ✅ OPTIONS preflight 허용
 app.options('*', cors({
   origin: 'http://localhost:5173',
@@ -105,6 +106,9 @@ app.post('/api/login', async (req, res) => {
     res.status(500).json({ success: false, message: '로그인 중 오류 발생' });
   }
 });
+
+const predictRoute = require('./routes/predict');
+app.use('/predict', predictRoute);
 
 // 8. 서버 실행
 const PORT = process.env.PORT || 5000;
