@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  model-server:
+    build: .
+    container_name: model-server
+    ports:
+      - "5005:5005"
+    env_file:
+      - .env
+    volumes:
+      - ../server/input_image:/app/input_image
