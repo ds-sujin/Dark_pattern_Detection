@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const fs = require('fs');
 const path = require('path');
 const Image = require('../db/image');
 
@@ -17,10 +16,8 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-
-// ✅ 2. OCR 없이 파일 저장 + DB 등록
 router.post('/', upload.single('image'), async (req, res) => {
-  console.log('[🔔 요청 도착] /upload');
+  console.log('[요청 도착] /upload');
   try {
     const { user_id, user_name } = req.body;
 
@@ -41,13 +38,10 @@ router.post('/', upload.single('image'), async (req, res) => {
     await newImage.save();
     console.log('[저장 완료]:', savedPath);
 
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.status(200).json({
-      success: true,
-      message: '업로드 성공',
-      fileName: req.file.originalname,
-      path: savedPath
+      filename: req.file.originalname 
     });
-
   } catch (err) {
     console.error('[업로드 오류]', err);
     res.status(500).json({ success: false, error: '서버 오류' });

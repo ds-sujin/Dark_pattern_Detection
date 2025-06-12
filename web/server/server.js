@@ -1,4 +1,4 @@
-// 1. 최상단에서 모듈 import
+// ✅ 1. 최상단에서 모듈 import
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 const { MongoClient } = require('mongodb');
@@ -8,29 +8,32 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 
-// ✅ CORS 미들웨어 (반드시 app.use보다 먼저!)
+// ✅ 2. CORS 미들웨어 (반드시 app.use보다 먼저!)
 app.use(cors({
   origin: 'http://localhost:5173',
   credentials: true
 }));
-
 
 // ✅ OPTIONS preflight 허용
 app.options('*', cors({
   origin: 'http://localhost:5173',
   credentials: true
 }));
+
+// ✅ 3. JSON 처리
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// 4. 라우터 import
+// ✅ 4. 라우터 import
 const authRoute = require('./routes/auth');
 const uploadRoute = require('./routes/upload');
 const NewsuploadRoute = require('./routes/image_upload');
 const newsRoutes = require('./routes/news');
 const quizRoutes = require('./routes/quiz');
+const predictRoute = require('./routes/predict'); // ✅ 여기에서 단 1번만 선언!
+console.log('[DEBUG] predictRoute:', predictRoute);  // null 또는 undefined인지 확인용
 
-// 5. DB 연결
+// ✅ 5. DB 연결
 const client = new MongoClient(process.env.MONGODB_URL);
 let usersCollection;
 
@@ -54,14 +57,15 @@ mongoose.connect(process.env.MONGODB_URL, {
   console.error('Mongoose 연결 실패:', err);
 });
 
-// 6. 라우터 등록
+// ✅ 6. 라우터 등록
 app.use('/api/auth', authRoute);
 app.use('/upload', uploadRoute);
 app.use('/news_uploads', NewsuploadRoute);
 app.use('/news', newsRoutes);
 app.use('/quiz', quizRoutes);
+app.use('/predict', predictRoute);  // ✅ 여기에도 한 번만 등록
 
-// 7. 기본 API (예: 회원가입, 로그인)
+// ✅ 7. 기본 API (회원가입/로그인)
 app.post('/api/register', async (req, res) => {
   const { id, password, name } = req.body;
 
@@ -107,10 +111,7 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-const predictRoute = require('./routes/predict');
-app.use('/predict', predictRoute);
-
-// 8. 서버 실행
+// ✅ 8. 서버 실행
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`서버 실행 중: http://localhost:${PORT}`);
