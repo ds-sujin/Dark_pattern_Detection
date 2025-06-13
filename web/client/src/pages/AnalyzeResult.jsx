@@ -1,6 +1,6 @@
 // AnalyzeResultPage.jsx
 import React, { useState, useEffect, useRef } from 'react';
-import './AnalyzeResult.css';
+import './AnalyzeResult.css';
 import DonutChart from '../components/DonutChart';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
