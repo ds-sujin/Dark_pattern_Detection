@@ -2,7 +2,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs'); //버전 오류로 수정함
 const { MongoClient } = require('mongodb');
 const mongoose = require('mongoose');
 

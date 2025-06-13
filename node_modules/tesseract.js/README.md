@@ -1,5 +1,10 @@
 <p align="center">
-<a href="https://tesseract.projectnaptha.com/"><img width="256px" height="256px" alt="Tesseract.js" src="./docs/images/tesseract.png"></a>
+  <a href="https://tesseract.projectnaptha.com/">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./docs/images/tesseract_dark.png">
+      <img width="256px" height="256px" alt="Tesseract.js" src="./docs/images/tesseract.png">
+    </picture>
+  </a>
 </p>
 
 ![Lint & Test](https://github.com/naptha/tesseract.js/workflows/Node.js%20CI/badge.svg)
@@ -9,15 +14,8 @@
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/naptha/tesseract.js/graphs/commit-activity)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Code Style](https://badgen.net/badge/code%20style/airbnb/ff5a5f?icon=airbnb)](https://github.com/airbnb/javascript)
-[![Downloads Total](https://img.shields.io/npm/dt/tesseract.js.svg)](https://www.npmjs.com/package/tesseract.js)
-[![Downloads Month](https://img.shields.io/npm/dm/tesseract.js.svg)](https://www.npmjs.com/package/tesseract.js)
-
-<h3 align="center">
-  Version 2 is now available and under development in the master branch, read a story about v2: <a href="https://jeromewu.github.io/why-i-refactor-tesseract.js-v2/">Why I refactor tesseract.js v2?</a><br>
-  Check the <a href="https://github.com/naptha/tesseract.js/tree/support/1.x">support/1.x</a> branch for version 1
-</h3>
-
-<br>
+![npm](https://img.shields.io/npm/dm/tesseract.js?label=npm%20downloads)
+![jsDelivr hits (npm)](https://img.shields.io/jsdelivr/npm/hm/tesseract.js?label=jsdelivr%20hits)
 
 Tesseract.js is a javascript library that gets words in [almost any language](./docs/tesseract_lang_list.md) out of images. ([Demo](http://tesseract.projectnaptha.com/))
 
@@ -31,104 +29,110 @@ Video Real-time Recognition
   <a href="https://github.com/jeromewu/tesseract.js-video"><img alt="Tesseract.js Video" src="./docs/images/video-demo.gif"></a>
 </p>
 
-
-Tesseract.js wraps an [emscripten](https://github.com/kripken/emscripten) [port](https://github.com/naptha/tesseract.js-core) of the [Tesseract](https://github.com/tesseract-ocr/tesseract) [OCR](https://en.wikipedia.org/wiki/Optical_character_recognition) Engine.
-It works in the browser using [webpack](https://webpack.js.org/) or plain script tags with a [CDN](#CDN) and on the server with [Node.js](https://nodejs.org/en/).
+Tesseract.js works in the browser using [webpack](https://webpack.js.org/), esm, or plain script tags with a [CDN](#CDN) and on the server with [Node.js](https://nodejs.org/en/).
 After you [install it](#installation), using it is as simple as:
-
-```javascript
-import Tesseract from 'tesseract.js';
-
-Tesseract.recognize(
-  'https://tesseract.projectnaptha.com/img/eng_bw.png',
-  'eng',
-  { logger: m => console.log(m) }
-).then(({ data: { text } }) => {
-  console.log(text);
-})
-```
-
-Or more imperative
 
 ```javascript
 import { createWorker } from 'tesseract.js';
 
-const worker = createWorker({
-  logger: m => console.log(m)
-});
-
 (async () => {
-  await worker.load();
-  await worker.loadLanguage('eng');
-  await worker.initialize('eng');
-  const { data: { text } } = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
-  console.log(text);
+  const worker = await createWorker('eng');
+  const ret = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
+  console.log(ret.data.text);
   await worker.terminate();
 })();
 ```
-
-[Check out the docs](#documentation) for a full explanation of the API.
-
-
-## Major changes in v2
-- Upgrade to tesseract v4.1.1 (using emscripten 1.39.10 upstream)
-- Support multiple languages at the same time, eg: eng+chi\_tra for English and Traditional Chinese
-- Supported image formats: png, jpg, bmp, pbm
-- Support WebAssembly (fallback to ASM.js when browser doesn't support)
-- Support Typescript
-
+When recognizing multiple images, users should create a worker once, run `worker.recognize` for each image, and then run `worker.terminate()` once at the end (rather than running the above snippet for every image). 
 
 ## Installation
 Tesseract.js works with a `<script>` tag via local copy or CDN, with webpack via `npm` and on Node.js with `npm/yarn`.
 
-
 ### CDN
 ```html
-<!-- v2 -->
-<script src='https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js'></script>
-
-<!-- v1 -->
-<script src='https://unpkg.com/tesseract.js@1.0.19/src/index.js'></script>
+<!-- v5 -->
+<script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
 ```
-After including the script the `Tesseract` variable will be globally available.
+After including the script the `Tesseract` variable will be globally available and a worker can be created using `Tesseract.createWorker`.
 
+Alternatively, an ESM build (used with `import` syntax) can be found at `https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.esm.min.js`. 
 
 ### Node.js
 
-**Tesseract.js currently requires Node.js v6.8.0 or higher**
+**Requires Node.js v14 or higher**
 
 ```shell
-# For v2
+# For latest version
 npm install tesseract.js
 yarn add tesseract.js
 
-# For v1
-npm install tesseract.js@1
-yarn add tesseract.js@1
+# For old versions
+npm install tesseract.js@3.0.3
+yarn add tesseract.js@3.0.3
 ```
 
+## Project Scope
+Tesseract.js aims to bring the [Tesseract](https://github.com/tesseract-ocr/tesseract) OCR engine (a separate project) to the browser and Node.js, and works by wrapping a [WebAssembly port](https://github.com/naptha/tesseract.js-core) of Tesseract.  This project does not modify core Tesseract features.  Most notably, **Tesseract.js does not support PDF files and does not modify the Tesseract recognition model to improve accuracy.**
+
+If your project requires features outside of this scope, consider the [Scribe.js library](https://github.com/scribeocr/scribe.js).  Scribe.js is an alternative library created to accommodate common feature requests that are outside of the scope of this repo.  Scribe.js includes improvements to the Tesseract recognition model and supports extracting text from PDF documents, among other features.  For more information see [Scribe.js vs. Tesseract.js](https://github.com/scribeocr/scribe.js/blob/master/docs/scribe_vs_tesseract.md).
 
 ## Documentation
 
+* [Workers vs. Schedulers](./docs/workers_vs_schedulers.md)
 * [Examples](./docs/examples.md)
-* [Image Format](./docs/image-format.md)
+* [Supported Image Formats](./docs/image-format.md)
 * [API](./docs/api.md)
 * [Local Installation](./docs/local-installation.md)
 * [FAQ](./docs/faq.md)
 
-## Use tesseract.js the way you like!
+## Community Projects and Examples
+The following are examples and projects built by the community using Tesseract.js. Officially supported examples are found in the [examples](https://github.com/naptha/tesseract.js/tree/master/examples) directory. 
 
-- Offline Version: https://github.com/jeromewu/tesseract.js-offline
-- Electron Version: https://github.com/jeromewu/tesseract.js-electron
-- Custom Traineddata: https://github.com/jeromewu/tesseract.js-custom-traineddata
-- Chrome Extension #1: https://github.com/jeromewu/tesseract.js-chrome-extension
-- Chrome Extension #2: https://github.com/fxnoob/image-to-text
-- Firefox Extension: https://github.com/gnonio/korporize
-- With Vue: https://github.com/jeromewu/tesseract.js-vue-app
-- With Angular: https://github.com/jeromewu/tesseract.js-angular-app
-- With React: https://github.com/jeromewu/tesseract.js-react-app
-- Typescript: https://github.com/jeromewu/tesseract.js-typescript
-- Video Real-time Recognition: https://github.com/jeromewu/tesseract.js-video
+- Projects
+   - Scribe OCR: web application for scanning documents (images and PDFs)
+      - Site at [scribeocr.com](https://scribeocr.com/), repo at [github.com/scribeocr/scribeocr](https://github.com/scribeocr/scribeocr)
+   - Chrome Extension (with Manifest V3): https://github.com/Tshetrim/Image-To-Text-OCR-extension-for-ChatGPT
+- Examples
+   - Converting PDF to text: https://github.com/racosa/pdf2text-ocr
+   - Use `blocks` output to generate granular data [word/symbol level]: https://github.com/Kishlay-notabot/tesseract-bbox-examples
+   - Electron: https://github.com/Balearica/tesseract.js-electron
+   - Typescript: https://github.com/Balearica/tesseract.js-typescript
+ 
+If you have a project or example repo that uses Tesseract.js, feel free to add it to this list using a pull request. Examples submitted should be well documented such that new users can run them; projects should be functional and actively maintained.
+
+## Major changes in v6
+Version 6 changes are documented in [this issue](https://github.com/naptha/tesseract.js/issues/993).  Highlights are below.
+ - Fixed memory leak in previous versions
+ - Overall reductions in runtime and memory usage
+ - Breaking changes:
+    - All outputs formats other than `text` are disabled by default.
+      - To re-enable the `hocr` output (for example), set the following: `worker.recognize(image, {}, { hocr: true })`
+    - Minor changes to the structure of the JavaScript object (`blocks`) output
+    - See [this issue](https://github.com/naptha/tesseract.js/issues/993) for full list
+
+## Major changes in v5
+Version 5 changes are documented in [this issue](https://github.com/naptha/tesseract.js/issues/820).  Highlights are below.
+
+ - Significantly smaller files by default (54% smaller for English, 73% smaller for Chinese)
+    - This results in a ~50% reduction in runtime for first-time users (who do not have the files cached yet)
+ - Significantly lower memory usage
+ - Breaking changes:
+    - `createWorker` arguments changed
+       - Setting non-default language and OEM now happens in `createWorker`
+          - E.g. `createWorker("chi_sim", 1)`
+    - `worker.initialize` and `worker.loadLanguage` functions should be deleted from code
+    - See [this issue](https://github.com/naptha/tesseract.js/issues/820) for full list
+
+Upgrading from v2 to v5?  See [this guide](https://github.com/naptha/tesseract.js/issues/771).
+
+## Major changes in v4
+Version 4 includes many new features and bug fixes--see [this issue](https://github.com/naptha/tesseract.js/issues/662) for a full list.  Several highlights are below. 
+
+- Added rotation preprocessing options (including auto-rotate) for significantly better accuracy
+- Processed images (rotated, grayscale, binary) can now be retrieved
+- Improved support for parallel processing (schedulers)
+- Breaking changes:
+  - `createWorker` is now async
+  - `getPDF` function replaced by `pdf` recognize option
 
 ## Contributing
 
@@ -146,14 +150,8 @@ npm install
 npm start
 ```
 
-The development server will be available at http://localhost:3000/examples/browser/demo.html in your favorite browser.
-It will automatically rebuild `tesseract.dev.js` and `worker.dev.js` when you change files in the **src** folder.
-
-### Online Setup with a single Click
-
-You can use Gitpod(A free online VS Code like IDE) for contributing. With a single click it will launch a ready to code workspace with the build & start scripts already in process and within a few seconds it will spin up the dev server so that you can start contributing straight away without wasting any time. 
-
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/naptha/tesseract.js/blob/master/examples/browser/demo.html)
+The development server will be available at http://localhost:3000/examples/browser/basic-efficient.html in your favorite browser.
+It will automatically rebuild `tesseract.min.js` and `worker.min.js` when you change files in the **src** folder.
 
 ### Building Static Files
 To build the compiled static files just execute the following:
@@ -162,11 +160,18 @@ npm run build
 ```
 This will output the files into the `dist` directory.
 
+### Run Tests
+**Always confirm the automated tests pass before submitting a pull request.**  To run the automated tests locally, run the following commands.
+```shell
+npm run lint
+npm run test
+```
+
 ## Contributors
 
 ### Code Contributors
 
-This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+This project exists thanks to all the people who contribute. [[Contribute](https://github.com/naptha/tesseract.js?tab=readme-ov-file#contributing)].
 <a href="https://github.com/naptha/tesseract.js/graphs/contributors"><img src="https://opencollective.com/tesseractjs/contributors.svg?width=890&button=false" /></a>
 
 ### Financial Contributors

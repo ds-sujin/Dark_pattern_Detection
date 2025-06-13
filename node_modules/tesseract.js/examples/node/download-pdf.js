@@ -1,7 +1,10 @@
 #!/usr/bin/env node
+
+'use strict';
+
 const path = require('path');
 const fs = require('fs');
-const { createWorker } = require('../../');
+const { createWorker } = require('../..');
 
 const [,, imagePath] = process.argv;
 const image = path.resolve(__dirname, (imagePath || '../../tests/assets/images/cosmic.png'));
@@ -9,14 +12,10 @@ const image = path.resolve(__dirname, (imagePath || '../../tests/assets/images/c
 console.log(`Recognizing ${image}`);
 
 (async () => {
-  const worker = createWorker();
-  await worker.load();
-  await worker.loadLanguage('eng');
-  await worker.initialize('eng');
-  const { data: { text } } = await worker.recognize(image);
+  const worker = await createWorker();
+  const { data: { text, pdf } } = await worker.recognize(image, { pdfTitle: 'Example PDF' }, { pdf: true });
   console.log(text);
-  const { data } = await worker.getPDF('Tesseract OCR Result');
-  fs.writeFileSync('tesseract-ocr-result.pdf', Buffer.from(data));
+  fs.writeFileSync('tesseract-ocr-result.pdf', Buffer.from(pdf));
   console.log('Generate PDF: tesseract-ocr-result.pdf');
   await worker.terminate();
 })();

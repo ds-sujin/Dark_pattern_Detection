@@ -1,8 +1,10 @@
+'use strict';
+
 const util = require('util');
 const fs = require('fs');
-const fetch = require('node-fetch');
+// Use built-in fetch if available, otherwise fallback to node-fetch
+const fetch = global.fetch || require('node-fetch');
 const isURL = require('is-url');
-const jo = require('jpeg-autorotate');
 
 const readFile = util.promisify(fs.readFile);
 
@@ -31,10 +33,6 @@ module.exports = async (image) => {
   } else if (Buffer.isBuffer(image)) {
     data = image;
   }
-
-  try {
-    data = (await jo.rotate(data, { quality: 100 })).buffer;
-  } catch (_) {} /* eslint-disable-line */
 
   return new Uint8Array(data);
 };

@@ -1,11 +1,14 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MainPage from './pages/MainPage';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import RegisterCompletePage from './pages/RegisterCompletePage';
 
 import NewsPage from './pages/NewsPage'; // ✅ 추가
 import AboutDark from './pages/AboutDark'; // ✅ 추가
-import AnalyzePage from './pages/AnalyzePage'; // ✅ 추가
+//import AnalyzePage from './pages/AnalyzePage'; // ✅ 추가
 import DarkQuiz from './pages/DarkQuiz'; // ✅ 추가
+import AnalyzeResult from './pages/AnalyzeResult'; //✅ 추가
 
 
 
@@ -15,7 +18,7 @@ function App() {
       <Routes>
         <Route path="/" element={<MainPage />} />
 
-        <Route path="/analyze" element={<AnalyzePage/>} />
+        <Route path="/analyze" element={<AnalyzeResult/>} />
         <Route path="/learn" element={<AboutDark/>} />
         <Route path="/news" element={<NewsPage />} />
         <Route path="/quiz" element={<DarkQuiz />} />

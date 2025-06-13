@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * terminateWorker
  *
@@ -6,5 +8,5 @@
  * @access public
  */
 module.exports = (worker) => {
-  worker.kill();
+  worker.terminate();
 };
