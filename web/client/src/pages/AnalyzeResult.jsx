@@ -112,7 +112,7 @@ function CaseCard({ item }) {
   );
 }
 
-function AnalyzeResultPage({ imageSrc = './analyze/analyze-ex.png', analysisData = dummyData }) {
+function AnalyzeResultPage({ imageSrc = '/analyze/analyze-ex.png', analysisData = dummyData }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [currentTab, setCurrentTab] = useState('laws');
