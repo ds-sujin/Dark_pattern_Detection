@@ -65,7 +65,8 @@ app.use('/news', newsRoutes);
 app.use('/quiz', quizRoutes);
 app.use('/predict', predictRoute);  // ✅ 여기에도 한 번만 등록
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
+// server/server.js 또는 app.js에 다음 코드가 있어야 함:
+app.use('/input_image', express.static(path.join(__dirname, 'input_image')));
 
 // ✅ 7. 기본 API (회원가입/로그인)
 app.post('/api/register', async (req, res) => {

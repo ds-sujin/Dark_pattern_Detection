@@ -160,7 +160,7 @@ function DarkQuiz() {
                     quizData[currentLevel - 1].picture !== '' && (
                       <div className="quiz-image-wrapper">
                         <img
-                          src={quizData[currentLevel - 1].picture}
+                          src={`http://localhost:5001${quizData[currentLevel - 1].picture}`}
                           alt="문제 이미지"
                           className="quiz-image"
                         />
