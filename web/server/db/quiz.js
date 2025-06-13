@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 
 const quizSchema = new mongoose.Schema({
@@ -7,7 +6,7 @@ const quizSchema = new mongoose.Schema({
   answer: [String],           // 보기형, 배열로
   real_answer: String,        // 실제 정답
   hint: String,
-  picture: String,            // Google Drive URL (선택)
+  picture: String,            // 업로드된 이미지 경로 (예: /uploads/파일명)
   explanation: String,
 }, {
   versionKey: false

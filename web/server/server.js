@@ -3,7 +3,7 @@ require('dotenv').config();
 const bcrypt = require('bcrypt');
 const { MongoClient } = require('mongodb');
 const mongoose = require('mongoose');
-
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -64,6 +64,8 @@ app.use('/news_uploads', NewsuploadRoute);
 app.use('/news', newsRoutes);
 app.use('/quiz', quizRoutes);
 app.use('/predict', predictRoute);  // ✅ 여기에도 한 번만 등록
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 // ✅ 7. 기본 API (회원가입/로그인)
 app.post('/api/register', async (req, res) => {
