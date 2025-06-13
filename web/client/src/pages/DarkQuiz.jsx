@@ -16,7 +16,7 @@ function DarkQuiz() {
 
   useEffect(() => {
     // DB에서 퀴즈 데이터 가져오기
-    axios.get('http://localhost:5000/quiz')
+    axios.get('http://localhost:5001/quiz')
       .then(res => {
         // level 순으로 정렬된 데이터라고 가정
         const sortedQuiz = res.data.data.sort((a, b) => a.level - b.level);

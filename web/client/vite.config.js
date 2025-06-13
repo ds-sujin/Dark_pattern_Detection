@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
 
-      '/news': 'http://localhost:5000',
+      '/news': 'http://localhost:5001',
     }
   }
 })

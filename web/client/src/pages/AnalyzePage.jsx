@@ -21,7 +21,7 @@ const AnalyzePage = () => {
     formData.append('user_name', user.name);
 
     try {
-      const response = await fetch('http://localhost:5000/upload', {
+      const response = await fetch('http://localhost:5001/upload', {
         method: 'POST',
         body: formData,
         credentials: 'include'  // ✅ 이거 꼭 있어야 해 (백에서 credentials: true 썼으니까)
@@ -35,7 +35,7 @@ const AnalyzePage = () => {
 
         setSelectedImage({ image: imageUrl, fileName, isSample: false });
 
-        navigate('/analyze/result', {
+        navigate('/analyze/loading', {
           state: {
             image: imageUrl,
             fileName,

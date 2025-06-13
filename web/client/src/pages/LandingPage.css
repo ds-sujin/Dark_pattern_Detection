@@ -1,0 +1,30 @@
+.loading-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f9fafb;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  
+  .loading-spinner {
+    border: 6px solid #e0e0e0;
+    border-top: 6px solid #6366f1; /* 보라색 느낌 */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1.2s linear infinite;
+    margin-bottom: 20px;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .loading-text {
+    font-size: 1.2rem;
+    color: #4b5563;
+    text-align: center;
+  }

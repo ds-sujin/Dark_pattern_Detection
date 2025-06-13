@@ -7,6 +7,9 @@ import NewsPage from './pages/NewsPage'; // ✅ 추가
 import AboutDark from './pages/AboutDark'; // ✅ 추가
 import AnalyzePage from './pages/AnalyzePage'; // ✅ 추가
 import DarkQuiz from './pages/DarkQuiz'; // ✅ 추가
+import AnalyzeResult from './pages/AnalyzeResult'; // 분석 결과 페이지
+import LandingPage from './pages/LandingPage'; // 꼭 추가
+
 
 
 
@@ -17,6 +20,8 @@ function App() {
         <Route path="/" element={<MainPage />} />
 
         <Route path="/analyze" element={<AnalyzePage/>} />
+        <Route path="/analyze/result" element={<AnalyzeResult />} />
+        <Route path="/analyze/loading" element={<LandingPage />} />
         <Route path="/learn" element={<AboutDark/>} />
         <Route path="/news" element={<NewsPage />} />
         <Route path="/quiz" element={<DarkQuiz />} />
