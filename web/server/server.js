@@ -36,7 +36,6 @@ const lawRoute = require('./routes/law'); // ✅ law 라우트 추가
 const suggestRoute = require('./routes/suggest');
 const predictDetailRoute = require('./routes/predict_detail');
 app.use('/predict_detail', predictDetailRoute);
-
 // ✅ MongoDB 연결
 const client = new MongoClient(process.env.MONGODB_URL);
 let usersCollection;
