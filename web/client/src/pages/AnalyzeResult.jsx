@@ -6,38 +6,11 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 
-const dummyData = [
-  {
-    text: '신규회원 전용 14만원 쿠폰 모두 다운받기',
-    bbox: [460, 425, 160, 30],
-    suggestions: [
-      '1만원 쿠폰과 5천원 쿠폰을 드려요.',
-      '처음 가입하면 쿠폰을 드립니다.',
-      '처음 가입하면 쿠폰을 드립니다. 처음 가입하면 쿠폰을 드립니다.'
-    ],
-    type: 'Sneaking',
-    predicate: '몰래 장바구니 추가',
-    confidence: 0.97,
-    laws: ['ICO 대 Emailmovers Limited', '개인정보 보호정책 명시 부족 등'],
-    examples: ['자동으로 장바구니에 담기는 항목 예시', '사용자 동의 없는 추가 옵션']
-  },
-  {
-    text: '구매 가능 수량 10개',
-    bbox: [400, 467, 65, 20],
-    suggestions: [
-      '상품 수량은 넉넉합니다.',
-      '지금이 아니어도 구매하실 수 있어요.'
-    ],
-    type: 'Scarcity',
-    predicate: 'Low-stock message',
-    confidence: 0.89,
-    laws: ['전자상거래법 제21조'],
-    examples: ['남은 수량 허위 표시', '구매 유도 문구 과장']
-  }
-];
+
 const softSpring = {
   type: 'spring',
   stiffness: 80,
@@ -65,25 +38,7 @@ const sampleCases = [
     "Related laws": ["FTC Act Section 5"]
   }
 ];
-//관련 법령 예시 데이터
-const sampleLaws = [
-  {
-    title: "Arizona Consumer Fraud Act, A.R.S. § 44–1521",
-    url: "https://www.deceptive.design/laws/arizona-consumer-fraud-act-a-r-s-ss",
-    definition: "Prohibits deceptive practices, fraud, and misrepresentations in the sale or advertisement of merchandise.",
-    excerpt: "A. The act, use or employment by any person of any deception, deceptive act or practice, fraud, misrepresentation...",
-    related_cases: ["A.A.A v. Borjamotor, S.A."],
-    related_deceptive_patterns: ["Sneaking", "Hard to cancel"]
-  },
-  {
-    title: "General Data Protection Regulation (GDPR), Article 7",
-    url: "https://www.deceptive.design/laws/gdpr-article-7",
-    definition: "Specifies conditions for consent to be valid under the GDPR.",
-    excerpt: "Consent should be freely given, specific, informed and unambiguous...",
-    related_cases: [],
-    related_deceptive_patterns: ["Obstruction"]
-  }
-];
+
 //관련 법령 컴포넌트
 function LawCard({ law }) {
   return (
@@ -111,265 +66,206 @@ function CaseCard({ item }) {
     </li>
   );
 }
-
-function AnalyzeResultPage({ imageSrc = '/analyze/analyze-ex.png', analysisData = dummyData }) {
+function AnalyzeResult() {
+  const [analysisData, setAnalysisData] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [currentTab, setCurrentTab] = useState('laws');
-  const currentData = analysisData[currentIndex];
-  const total = analysisData.length;
-  const [cases] = useState(sampleCases);
-  const imageRef = useRef(null);  
   const [imageSize, setImageSize] = useState({ width: 1, height: 1 });
+  const [naturalSize, setNaturalSize] = useState({ width: 800, height: 600 });
+  const [loading, setLoading] = useState(true);
+  const [currentTab, setCurrentTab] = useState('laws');
+  const [relatedLaws, setRelatedLaws] = useState([]);
 
+  const location = useLocation();
+  const imageRef = useRef(null);
+  const navigate = useNavigate();
 
-  const tabRefs = {
-  laws: null,
-  examples: null,
-    };
-    const [underlineStyle, setUnderlineStyle] = useState({});
-  
-  const handleNext = () => {
-    setLoading(true);
-    setTimeout(() => {
-        setCurrentIndex((prev) => (prev + 1) % total);
-        setLoading(false);
-    }, 500); // ⏳ 로딩 지속 시간
-    };
-
-    const handlePrev = () => {
-    setLoading(true);
-    setTimeout(() => {
-        setCurrentIndex((prev) => (prev - 1 + total) % total);
-        setLoading(false);
-    }, 500);
-    };
+  const filename = location.state?.fileName;
+  const imageSrc = `http://localhost:5001/input_image/${filename}`;
+  const total = analysisData.length;
 
   useEffect(() => {
-    
-    const updateSize = () => {
-      if (imageRef.current) {
-        setImageSize({
-          width: imageRef.current.offsetWidth,
-          height: imageRef.current.offsetHeight,
+    if (!filename) return;
+
+    const fetchAnalysis = async () => {
+      try {
+        const res = await fetch('http://localhost:5001/predict_detail', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ filename }),
         });
+
+        const result = await res.json();
+        console.log('✅ 분석 데이터:', result);
+        setAnalysisData(result);
+      } catch (err) {
+        console.error('❌ 분석 실패:', err);
+      } finally {
+        setLoading(false);
       }
     };
-    updateSize();
-    window.addEventListener('resize', updateSize);
-    return () => window.removeEventListener('resize', updateSize);
-  }, []);
 
-  let scaledBox = { top: '0px', left: '0px', width: '0px', height: '0px' };
-  if (currentData?.bbox && imageSize.width > 1 && imageSize.height > 1) {
-    const [x, y, w, h] = currentData.bbox;
-    const scaleX = imageSize.width / 800;
-    const scaleY = imageSize.height / 600;
-    scaledBox = {
-      top: `${y * scaleY}px`,
-      left: `${x * scaleX}px`,
-      width: `${w * scaleX}px`,
-      height: `${h * scaleY}px`
-    };
-  }
-    useEffect(() => {
-    const activeTab = tabRefs[currentTab];
-    if (activeTab) {
-        setUnderlineStyle({
-        left: activeTab.offsetLeft + 'px',
-        width: activeTab.offsetWidth + 'px',
-        });
+    fetchAnalysis();
+  }, [filename]);
+
+
+  const handleImageLoad = () => {
+    if (imageRef.current) {
+      setImageSize({
+        width: imageRef.current.offsetWidth,
+        height: imageRef.current.offsetHeight,
+      });
+      setNaturalSize({
+        width: imageRef.current.naturalWidth,
+        height: imageRef.current.naturalHeight,
+      });
     }
-    }, [currentTab]);
+  };
+
+  const currentData = analysisData[currentIndex] ?? null;
+
+useEffect(() => {
+  const fetchLaw = async () => {
+    if (!currentData || !currentData.type) return;
+
+    try {
+      const res = await fetch('http://localhost:5001/law', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: currentData.title })
+      });
+      const lawResult = await res.json();
+      setRelatedLaws([lawResult]);
+    } catch (err) {
+      console.error('❌ 관련 법령 로딩 실패:', err);
+    }
+  };
+
+  fetchLaw();
+}, [currentData]);
+
+  if (!currentData || !currentData.bbox) {
+    return <div className="loading">분석 데이터를 불러오는 중입니다...</div>;
+  }
+
+  
+
+  const { x, y, width: w, height: h } = currentData.bbox;
+  const scaleX = imageSize.width / naturalSize.width;
+  const scaleY = imageSize.height / naturalSize.height;
+  const scaledBox = {
+    top: `${y * scaleY}px`,
+    left: `${x * scaleX}px`,
+    width: `${w * scaleX}px`,
+    height: `${h * scaleY}px`,
+  };
+
 
   return (
     <div className="analyzeAll-page">
-        <Navbar></Navbar>
-    <motion.div
-      className="analysis-page"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1, ease: 'easeOut' }}
-    >
-      <div className="left-column">
-        <motion.div
-          className="image-card"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={softSpring}
-        >
-          <div className="image-header">
-            <div>
-              <h3>분석이미지</h3>
-              <p>분석이 완료되었습니다. 다크패턴 분석 결과를 확인하세요.</p>
-            </div>
-            
-          </div>
-         <div className="upload-result" style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <p><strong>총 {total}개의 다크패턴 문장이 탐지되었습니다.</strong></p>
-                <div className="pagination-container">
-            <button
-                className="circle-pagination-button"
-                onClick={handlePrev}
-                disabled={currentIndex === 0}
-                aria-label="이전"
-                >
-                <img src="./analyze/left-circle.svg" alt="이전" className="icon" />
-                </button>
-
-                <span className="page-indicator">
-                {currentIndex + 1} / {total}
-                </span>
-
-                <button
-                className="circle-pagination-button"
-                onClick={handleNext}
-                disabled={currentIndex === total - 1}
-                aria-label="다음"
-                >
-                <img src="./analyze/right-circle.svg" alt="다음" className="icon" />
-                </button>
+      <motion.div className="analysis-page">
+        <div className="left-column">
+          <div className="image-scroll-container">
+            <div className="image-card">
+              <div className="uploaded-image-wrapper">
+                <img
+                  ref={imageRef}
+                  src={imageSrc}
+                  alt="분석 이미지"
+                  className="uploaded-image"
+                  onLoad={handleImageLoad}
+                />
+                <div className="highlight-box" style={{ ...scaledBox, position: 'absolute' }}></div>
+              </div>
             </div>
           </div>
-          
-          <div className="uploaded-image-wrapper">
-            <img ref={imageRef} src={imageSrc} alt="분석 이미지" className="uploaded-image" />
-            <div
-                className="highlight-box"
-                style={{
-                    ...scaledBox,
-                    position: 'absolute'
-                }}
-                ></div>
-          </div>
-        </motion.div>
-              <div className="bottom-row">
-          <motion.div
-            className="text-card"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ ...softSpring, delay: 0.1 }}
-          >
-            <div className="text-title">
-            <h4>탐지된 문장</h4>
-            <span className="ocr-label">OCR 신뢰도 : {Math.round(currentData.confidence * 100)}%</span>
-            </div>
-            <div className="text-content">
-                {loading ? (
-                <Skeleton count={3} height={20} />
-            ) : (
-                <p>{currentData.text}</p>
-            )}
-            </div>
-          </motion.div>
 
-          <motion.div
-            className="suggestion-card"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ ...softSpring, delay: 0.2 }}
-          >
-            <h4>해당 문장을 이렇게 바꿔보세요.</h4>
-            <div className="suggestion-content">
-                {loading ? (
-                    <Skeleton count={3} height={18} style={{ marginBottom: '0.5rem' }} />
-                ) : (
-                    <ul>
-                    {currentData.suggestions.map((s, i) => <li key={i}>{s}</li>)}
-                    </ul>
-                )}
+          <div className="bottom-row">
+            <div className="upload-result">
+              <p><strong>총 {total}개의 다크패턴 문장이 탐지되었습니다.</strong></p>
+              <div className="pagination-container">
+                <button onClick={() => setCurrentIndex(prev => Math.max(prev - 1, 0))} disabled={currentIndex === 0}>이전</button>
+                <span>{currentIndex + 1} / {total}</span>
+                <button onClick={() => setCurrentIndex(prev => Math.min(prev + 1, total - 1))} disabled={currentIndex === total - 1}>다음</button>
+              </div>
+            </div>
+
+            <div className="bottom-card-row">
+              <motion.div className="text-card">
+                <div className="text-title">
+                  <h4>탐지된 문장</h4>
+                  <span className="ocr-label">OCR 신뢰도 : {Math.round(currentData.confidence)}%</span>
                 </div>
-          </motion.div>
-        </div>
-      </div>
+                <div className="text-content">
+                  {loading ? <Skeleton count={3} height={20} /> : <p>{currentData.text}</p>}
+                </div>
+              </motion.div>
 
-      <div className="right-column">
-        <div className="top-row">
-          <motion.div
-            className="pattern-card"
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ ...softSpring, delay: 0.1 }}
-          >
-            <div className="pattern-card-left">
+              <motion.div className="suggestion-card">
+                <h4>해당 문장을 이렇게 바꿔보세요.</h4>
+                <div className="suggestion-content">
+                  {loading ? <Skeleton count={3} height={18} /> : (
+                    Array.isArray(currentData.suggestions) ? (
+                      <ul>
+                        {currentData.suggestions.map((s, i) => <li key={i}>{s}</li>)}
+                      </ul>
+                    ) : (
+                      <p>추천 문장이 없습니다.</p>
+                    )
+                  )}
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+
+        <div className="right-column">
+          <div className="top-row">
+            <motion.div className="pattern-card">
+              <div className="pattern-card-left">
                 <div className="pattern-card-title">
-            <h4>다크패턴 유형</h4>
-            <span className="ocr-label">AI 분석</span>
-            </div>
-            <div className="donut-wrapper">
-            
-                    <DonutChart value={currentData.confidence} label={currentData.type} />
-            
+                  <h4>다크패턴 유형</h4>
+                  <span className="ocr-label">AI 분석</span>
                 </div>
-            <p>{currentData.type} 유형은 사용자의 의도와 무관하게 특정 행동이 유도되는 방식입니다.</p>
-            </div>
-          </motion.div>
-          <motion.div
-            className="subtype-card"
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ ...softSpring, delay: 0.2 }}
-          >
-            <h4>다크패턴 세부유형</h4>
-            <div className="subtype-contents-type">
-            <p><strong>{currentData.predicate}</strong></p>
-            <p>사용자가 직접 선택하지 않았거나 동의 없이 항목이나 요금이 자동 추가된 경우입니다.</p>
-            </div>
-          </motion.div>
-
-        </div>
-
-        <motion.div
-          className="legal-card"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ ...softSpring, delay: 0.3 }}
-        >
-          
-        <div className="tab-line-container">
-        <div className="tab-line">
-            <button
-            className={`tab-link ${currentTab === 'laws' ? 'active' : ''}`}
-            onClick={() => setCurrentTab('laws')}
-            ref={el => (tabRefs.laws = el)}
-            >
-            관련 법령
-            </button>
-            <button
-            className={`tab-link ${currentTab === 'examples' ? 'active' : ''}`}
-            onClick={() => setCurrentTab('examples')}
-            ref={el => (tabRefs.examples = el)}
-            >
-            실제 사례
-            </button>
-            <span className="tab-underline" style={underlineStyle}></span>
-        </div>
-        </div>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentTab}
-              className="tab-content"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.4, ease: 'easeOut' }}
-            >
-              <ul>
-                {currentTab === 'laws'
-                    ? sampleLaws.map((law, i) => <LawCard key={i} law={law} />)
-                    : cases.map((item, i) => <CaseCard key={i} item={item} />)}
-                </ul>
+                <div className="donut-wrapper">
+                  <DonutChart value={currentData.prob * 0.01} label={currentData.type} />
+                </div>
+              </div>
             </motion.div>
-          </AnimatePresence>
-        </motion.div>
-      </div>
-      <div className='back-btn'>
-        <button className="upload-btn">다른 이미지 분석하기</button>
-      </div>
-    </motion.div>
-    <Footer></Footer>
+
+            <motion.div className="subtype-card">
+              <h4>다크패턴 세부유형</h4>
+              <div className="subtype-contents-type">
+                <p><strong>{currentData.predicate}</strong></p>
+              </div>
+            </motion.div>
+          </div>
+
+          <motion.div className="legal-card">
+            <div className="tab-line-container">
+              <div className="tab-line">
+                <button className={`tab-link ${currentTab === 'laws' ? 'active' : ''}`} onClick={() => setCurrentTab('laws')}>관련 법령</button>
+                <button className={`tab-link ${currentTab === 'cases' ? 'active' : ''}`} onClick={() => setCurrentTab('cases')}>실제 사례</button>
+              </div>
+            </div>
+            <motion.div className="tab-content">
+             <ul>
+              {currentTab === 'laws'
+                ? relatedLaws.map((law, i) => <LawCard key={i} law={law} />)
+                : sampleCases.map((item, i) => <CaseCard key={i} item={item} />)}
+            </ul>
+            </motion.div>
+          </motion.div>
+
+          <div className="back-btn">
+            <button className="upload-btn" onClick={() => navigate('/analyze')}>다른 이미지 분석하기</button>
+          </div>
+        </div>
+      </motion.div>
+      <Footer />
     </div>
   );
 }
 
-export default AnalyzeResultPage;
+
+export default AnalyzeResult;
+
