@@ -24,14 +24,14 @@ const AnalyzePage = () => {
       const response = await fetch('http://localhost:5001/upload', {
         method: 'POST',
         body: formData,
-        credentials: 'include'  // ✅ 이거 꼭 있어야 해 (백에서 credentials: true 썼으니까)
+        credentials: 'include'
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        const imageUrl = URL.createObjectURL(file);
-        const fileName = file.name;
+        const fileName = result.filename; // ✅ 서버에서 받은 실제 저장 파일명
+        const imageUrl = `http://localhost:5001/input_image/${fileName}`; // ✅ static URL로 구성
 
         setSelectedImage({ image: imageUrl, fileName, isSample: false });
 
@@ -40,7 +40,7 @@ const AnalyzePage = () => {
             image: imageUrl,
             fileName,
             isSample: false,
-            ocrText: '',         // ✅ OCR 사용 안함
+            ocrText: '',
             isSecondSample: fileName === 'sample_darkpattern2.png',
           },
         });
