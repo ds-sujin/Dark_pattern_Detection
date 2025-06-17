@@ -76,17 +76,43 @@ function AnalyzeResult() {
   }, [filename]);
 
   useEffect(() => {
+    setLoading(true);
+  }, [currentIndex]);
+
+
+  useEffect(() => {
+  const handleResize = () => {
     if (imageRef.current) {
       setImageSize({
         width: imageRef.current.offsetWidth,
         height: imageRef.current.offsetHeight,
       });
-      setNaturalSize({
-        width: imageRef.current.naturalWidth,
-        height: imageRef.current.naturalHeight,
-      });
     }
-  }, [analysisData]);
+  };
+
+  window.addEventListener('resize', handleResize);
+
+  // 초기 실행
+  handleResize();
+
+  return () => window.removeEventListener('resize', handleResize);
+}, []);
+
+  const handleImageLoad = () => {
+  if (imageRef.current) {
+    setImageSize({
+      width: imageRef.current.offsetWidth,
+      height: imageRef.current.offsetHeight,
+    });
+    setNaturalSize({
+      width: imageRef.current.naturalWidth,
+      height: imageRef.current.naturalHeight,
+    });
+  }
+};
+
+  const currentData = analysisData[currentIndex] ?? null;
+
 
   useEffect(() => {
     if (!currentData?.type) return;
@@ -231,8 +257,11 @@ function AnalyzeResult() {
                     <DonutChart value={currentData.prob * 0.01} label={currentData.type} />
                   </div>
                 </div>
-              </motion.div>
-            </div>
+                <div className="donut-wrapper">
+                  <DonutChart value={currentData.prob * 0.01} label={currentData.type} />
+                </div>
+              </div>
+            </motion.div>
 
             <motion.div className="subtype-card">
               <h4>다크패턴 세부유형</h4>
@@ -240,6 +269,8 @@ function AnalyzeResult() {
                 <p><strong>{currentData.predicate}</strong></p>
               </div>
             </motion.div>
+          </div>
+
 
             <motion.div className="legal-card">
               <div className="tab-line-container">

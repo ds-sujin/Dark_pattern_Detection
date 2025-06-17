@@ -192,7 +192,19 @@ html, body, .analyzeAll-page {
 }
 
 .text-card h4, .suggestion-card h4, .pattern-card h4, .subtype-card h4{
-  margin: 0;
+  margin-bottom: 0.5rem;
+  margin-top: 0.2rem;
+}
+
+
+
+.subtype-card{
+  background: white;
+  border-radius: 12px;
+  padding: 1.2rem 1.2rem 1rem 1.2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  
 }
 
 .subtype-card strong{
@@ -268,11 +280,11 @@ html, body, .analyzeAll-page {
 /* 💡 수정된 부분: pattern-card와 subtype-card 가로 정렬 */
 .top-row {
   display: flex;
-  flex-direction: row;
+  flex-direction: column; /* ✅ 세로 정렬로 변경 */
   gap: 1rem;
 }
 
-.pattern-card, .subtype-card {
+.pattern-card {
   background: white;
   border-radius: 12px;
   padding: 1.2rem;
