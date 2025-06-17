@@ -7,4 +7,3 @@ transformers
 joblib
 scikit-learn
 pandas
-sentencepiece
