@@ -36,7 +36,7 @@ function LandingPage() {
         navigate('/analyze/result');
       } catch (error) {
         console.error('❌ 예측 실패:', error);
-        alert('예측 중 오류가 발생했습니다.');
+        //alert('예측 중 오류가 발생했습니다.');
       } finally {
         setLoading(false);
       }

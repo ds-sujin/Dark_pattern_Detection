@@ -97,54 +97,81 @@ function AnalyzeResult() {
   const currentData = analysisData[currentIndex] ?? null;
 
   useEffect(() => {
-    const fetchLaw = async () => {
-      if (!currentData || !currentData.type) return;
-
+    const normalizeTitle = (str) =>
+      str.replace(/–|—/g, '-').replace(/\s+/g, ' ').trim();
+  
+    const fetchLaws = async () => {
+      if (!currentData || !currentData.laws || !Array.isArray(currentData.laws)) return;
+  
       try {
-        const res = await fetch('http://localhost:5001/law', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ title: currentData.type })
-        });
-
-        if (!res.ok) {
-          console.warn('❗ 관련 법령을 찾을 수 없음');
-          setRelatedLaws([]);
-          return;
-        }
-
-        const lawResult = await res.json();
-        setRelatedLaws([lawResult]);
+        const responses = await Promise.all(
+          currentData.laws.map(async (lawTitle) => {
+            const cleanTitle = normalizeTitle(lawTitle);
+  
+            const res = await fetch('http://localhost:5001/law', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ title: cleanTitle })
+            });
+  
+            if (res.ok) {
+              return await res.json();
+            } else {
+              console.warn(`❗ 관련 법령을 찾을 수 없음: ${cleanTitle}`);
+              return null;
+            }
+          })
+        );
+  
+        const filtered = responses.filter(Boolean);
+        setRelatedLaws(filtered);
       } catch (err) {
         console.error('❌ 관련 법령 요청 실패:', err);
         setRelatedLaws([]);
       }
     };
-
-    fetchLaw();
+  
+    fetchLaws();
   }, [currentData]);
 
 
   useEffect(() => {
+    const normalizeTitle = (str) =>
+      str.replace(/–|—/g, '-').replace(/\s+/g, ' ').trim();
+  
     const fetchCases = async () => {
-      if (!currentData?.type) return;
-
+      if (!currentData || !currentData.laws || !Array.isArray(currentData.laws)) return;
+  
       try {
-        const res = await fetch('http://localhost:5001/case', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title: currentData.type }),
-        });
-
-        const cases = await res.json();
-        setRelatedCases(cases);
+        const responses = await Promise.all(
+          currentData.laws.map(async (lawTitle) => {
+            const cleanTitle = normalizeTitle(lawTitle);
+  
+            const res = await fetch('http://localhost:5001/case', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ title: cleanTitle })
+            });
+  
+            if (res.ok) {
+              return await res.json();  // ✅ 이건 배열
+            } else {
+              console.warn(`❗ 관련 사례 없음: ${cleanTitle}`);
+              return [];
+            }
+          })
+        );
+  
+        const mergedCases = responses.flat(); // 배열 안 배열 → 1차원으로 합치기
+        setRelatedCases(mergedCases);
       } catch (err) {
+        console.error('❌ 사례 검색 실패:', err);
         setRelatedCases([]);
       }
     };
-
+  
     fetchCases();
   }, [currentData]);
 
