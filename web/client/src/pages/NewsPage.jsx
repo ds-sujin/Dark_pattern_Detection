@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './Navbar.css';
+import "../components/Navbar.css"; // 수정된 경로
+
 
 const Navbar = () => {
   const navigate = useNavigate();
