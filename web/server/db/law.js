@@ -1,11 +1,21 @@
+// server/db/law.js
+const { MongoClient } = require('mongodb');
+require('dotenv').config();
 
-const mongoose = require('mongoose');
+const uri = process.env.MONGODB_URL;
+const dbName = process.env.DB_NAME;
+const collectionName = 'law';
 
-const lawSchema = new mongoose.Schema({
-  title: String,
-  url: String,
-  definition: String,
-  excerpt: String
-});
+let lawCollection;
 
-module.exports = mongoose.model('Law', lawSchema);
+async function connectLawCollection() {
+  if (!lawCollection) {
+    const client = new MongoClient(uri);
+    await client.connect();
+    const db = client.db(dbName);
+    lawCollection = db.collection(collectionName);
+  }
+  return lawCollection;
+}
+
+module.exports = { connectLawCollection };
