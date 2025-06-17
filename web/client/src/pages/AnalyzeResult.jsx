@@ -9,51 +9,19 @@ import Footer from '../components/Footer';
 import { motion } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-
-
-const softSpring = {
-  type: 'spring',
-  stiffness: 80,
-  damping: 18,
-  mass: 0.5,
-};
-//관련 예시 데이터
-const sampleCases = [
-  {
-    title: "A.A.A v. Borjamotor, S.A.",
-    url: "https://www.deceptive.design/cases/a-a-a-v-borjamotor-s-a",
-    Excerpt: "BORJAMOTOR, S.A. received a complaint from a customer...",
-    "Our analysis": "The hard to cancel deceptive pattern, used by BORJAMOTOR, S.A., made it difficult for users to withdraw consent.",
-    Outcome: "Borjamotor, S.A. was fined by the Spanish DPA (AEPD) for violating Art. 7 GDPR.",
-    "Related deceptive patterns": ["Hard to cancel"],
-    "Related laws": ["GDPR Article 7", "GDPR Article 12"]
-  },
-  {
-    title: "B.B.B v. DarkShop Inc.",
-    url: "https://www.deceptive.design/cases/b-b-b-v-darkshop",
-    Excerpt: "DarkShop Inc. faced a complaint regarding misleading subscription flows.",
-    "Our analysis": "They used roach motel techniques, making it easy to sign up but hard to cancel.",
-    Outcome: "They received sanctions from the FTC.",
-    "Related deceptive patterns": ["Roach Motel"],
-    "Related laws": ["FTC Act Section 5"]
-  }
-];
-
-//관련 법령 컴포넌트
 function LawCard({ law }) {
   return (
     <li className="law-card">
       <a href={law.url} className="law-title" target="_blank" rel="noreferrer">
         {law.title}
       </a>
-      <p className="law-definition"><strong>정의:</strong> {law.definition}</p>
-      <p className="law-excerpt"><strong>조항:</strong> {law.excerpt}</p>
+      <p className="law-definition"><strong>객정:</strong> {law.definition}</p>
+      <p className="law-excerpt"><strong>조합:</strong> {law.excerpt}</p>
       <span className="law-url">{law.url}</span>
     </li>
   );
 }
 
-//관련 법령이랑 다크패턴 유형은 제외해서 사용 (관련사례 컴포넌트)
 function CaseCard({ item }) {
   return (
     <li className="case-card">
@@ -66,6 +34,7 @@ function CaseCard({ item }) {
     </li>
   );
 }
+
 function AnalyzeResult() {
   const [analysisData, setAnalysisData] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -74,6 +43,8 @@ function AnalyzeResult() {
   const [loading, setLoading] = useState(true);
   const [currentTab, setCurrentTab] = useState('laws');
   const [relatedLaws, setRelatedLaws] = useState([]);
+  const [relatedCases, setRelatedCases] = useState([]);
+  const [suggestedSentences, setSuggestedSentences] = useState([]);
 
   const location = useLocation();
   const imageRef = useRef(null);
@@ -95,10 +66,9 @@ function AnalyzeResult() {
         });
 
         const result = await res.json();
-        console.log('✅ 분석 데이터:', result);
         setAnalysisData(result);
       } catch (err) {
-        console.error('❌ 분석 실패:', err);
+        console.error('Analysis fetch failed:', err);
       } finally {
         setLoading(false);
       }
@@ -107,6 +77,9 @@ function AnalyzeResult() {
     fetchAnalysis();
   }, [filename]);
 
+  useEffect(() => {
+    setLoading(true);
+  }, [currentIndex]);
 
   const handleImageLoad = () => {
     if (imageRef.current) {
@@ -123,31 +96,84 @@ function AnalyzeResult() {
 
   const currentData = analysisData[currentIndex] ?? null;
 
-useEffect(() => {
-  const fetchLaw = async () => {
-    if (!currentData || !currentData.type) return;
+  useEffect(() => {
+    const fetchLaw = async () => {
+      if (!currentData || !currentData.type) return;
 
-    try {
-      const res = await fetch('http://localhost:5001/law', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: currentData.title })
-      });
-      const lawResult = await res.json();
-      setRelatedLaws([lawResult]);
-    } catch (err) {
-      console.error('❌ 관련 법령 로딩 실패:', err);
-    }
-  };
+      try {
+        const res = await fetch('http://localhost:5001/law', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ title: currentData.type })
+        });
 
-  fetchLaw();
-}, [currentData]);
+        if (!res.ok) {
+          console.warn('❗ 관련 법령을 찾을 수 없음');
+          setRelatedLaws([]);
+          return;
+        }
 
-  if (!currentData || !currentData.bbox) {
+        const lawResult = await res.json();
+        setRelatedLaws([lawResult]);
+      } catch (err) {
+        console.error('❌ 관련 법령 요청 실패:', err);
+        setRelatedLaws([]);
+      }
+    };
+
+    fetchLaw();
+  }, [currentData]);
+
+
+  useEffect(() => {
+    const fetchCases = async () => {
+      if (!currentData?.type) return;
+
+      try {
+        const res = await fetch('http://localhost:5001/case', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: currentData.type }),
+        });
+
+        const cases = await res.json();
+        setRelatedCases(cases);
+      } catch (err) {
+        setRelatedCases([]);
+      }
+    };
+
+    fetchCases();
+  }, [currentData]);
+
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (!currentData?.text) return;
+
+      try {
+        const res = await fetch('http://localhost:5001/suggest', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: currentData.text }),
+        });
+
+        const result = await res.json();
+        setSuggestedSentences(result.suggestions.map(s => s.replace(/^\d+\.\s*/, '')));
+        setTimeout(() => setLoading(false), 100);
+      } catch (err) {
+        setSuggestedSentences([]);
+        setLoading(false);
+      }
+    };
+
+    fetchSuggestions();
+  }, [currentData]);
+
+  if (!currentData?.bbox) {
     return <div className="loading">분석 데이터를 불러오는 중입니다...</div>;
   }
-
-  
 
   const { x, y, width: w, height: h } = currentData.bbox;
   const scaleX = imageSize.width / naturalSize.width;
@@ -159,7 +185,6 @@ useEffect(() => {
     height: `${h * scaleY}px`,
   };
 
-
   return (
     <div className="analyzeAll-page">
       <motion.div className="analysis-page">
@@ -167,13 +192,7 @@ useEffect(() => {
           <div className="image-scroll-container">
             <div className="image-card">
               <div className="uploaded-image-wrapper">
-                <img
-                  ref={imageRef}
-                  src={imageSrc}
-                  alt="분석 이미지"
-                  className="uploaded-image"
-                  onLoad={handleImageLoad}
-                />
+                <img ref={imageRef} src={imageSrc} alt="분석 이미지" className="uploaded-image" onLoad={handleImageLoad} />
                 <div className="highlight-box" style={{ ...scaledBox, position: 'absolute' }}></div>
               </div>
             </div>
@@ -196,21 +215,21 @@ useEffect(() => {
                   <span className="ocr-label">OCR 신뢰도 : {Math.round(currentData.confidence)}%</span>
                 </div>
                 <div className="text-content">
-                  {loading ? <Skeleton count={3} height={20} /> : <p>{currentData.text}</p>}
+                  {loading ? <Skeleton count={3} height={18} /> : <p>{currentData.text}</p>}
                 </div>
               </motion.div>
 
               <motion.div className="suggestion-card">
                 <h4>해당 문장을 이렇게 바꿔보세요.</h4>
                 <div className="suggestion-content">
-                  {loading ? <Skeleton count={3} height={18} /> : (
-                    Array.isArray(currentData.suggestions) ? (
-                      <ul>
-                        {currentData.suggestions.map((s, i) => <li key={i}>{s}</li>)}
-                      </ul>
-                    ) : (
-                      <p>추천 문장이 없습니다.</p>
-                    )
+                  {loading ? (
+                    <Skeleton count={3} height={18} />
+                  ) : suggestedSentences.length > 0 ? (
+                    <ul>
+                      {suggestedSentences.map((s, i) => <li key={i}>{s}</li>)}
+                    </ul>
+                  ) : (
+                    <p>추천 문장이 없습니다.</p>
                   )}
                 </div>
               </motion.div>
@@ -231,14 +250,14 @@ useEffect(() => {
                 </div>
               </div>
             </motion.div>
+          </div>
 
-            <motion.div className="subtype-card">
+          <motion.div className="subtype-card">
               <h4>다크패턴 세부유형</h4>
               <div className="subtype-contents-type">
                 <p><strong>{currentData.predicate}</strong></p>
               </div>
             </motion.div>
-          </div>
 
           <motion.div className="legal-card">
             <div className="tab-line-container">
@@ -248,11 +267,15 @@ useEffect(() => {
               </div>
             </div>
             <motion.div className="tab-content">
-             <ul>
-              {currentTab === 'laws'
-                ? relatedLaws.map((law, i) => <LawCard key={i} law={law} />)
-                : sampleCases.map((item, i) => <CaseCard key={i} item={item} />)}
-            </ul>
+              {currentTab === 'laws' ? (
+                <ul>
+                  {relatedLaws.length > 0 ? relatedLaws.map((law, i) => <LawCard key={i} law={law} />) : <li className="law-card"><p className="law-definition"><strong>❗ 관련 법령 정보를 찾을 수 없습니다.</strong></p></li>}
+                </ul>
+              ) : (
+                <ul>
+                  {relatedCases.length > 0 ? relatedCases.map((item, i) => <CaseCard key={i} item={item} />) : <li className="case-card"><p><strong>❗ 관련 사례 정보를 찾을 수 없습니다.</strong></p></li>}
+                </ul>
+              )}
             </motion.div>
           </motion.div>
 
@@ -266,6 +289,4 @@ useEffect(() => {
   );
 }
 
-
 export default AnalyzeResult;
-
