@@ -93,7 +93,7 @@ const RegisterPage = () => {
               checked={agree}
               onChange={(e) => setAgree(e.target.checked)}
             />
-            (필수) 개인정보 수집 및 이용에 동의합니다.
+            <span className="checkbox-text">(필수) 개인정보 수집 및 이용에 동의합니다.</span>
           </label>
 
           {error && <p className="error">{error}</p>}

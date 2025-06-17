@@ -1,0 +1,20 @@
+.complete-container {
+  text-align: center;
+  padding: 2rem;
+}
+
+.celebration-img {
+  width: 120px;
+  height: auto;
+  margin-bottom: 1rem;
+}
+
+.login-button {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 10px 20px;
+  background-color: #0077cc;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}

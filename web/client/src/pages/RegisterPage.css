@@ -40,6 +40,21 @@
   .checkbox-container {
     display: flex;
     align-items: center;
+    gap: 0.5rem;
     font-size: 0.9rem;
+    cursor: pointer;
   }
-  
+
+  .checkbox-container input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    padding: 0;
+    flex-shrink: 0;
+    appearance: auto; /* 혹시 none 적용돼 있다면 원래대로 */
+  }
+
+  .checkbox-text {
+    user-select: none;
+  }
+ 

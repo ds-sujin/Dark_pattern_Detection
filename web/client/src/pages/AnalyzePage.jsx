@@ -8,12 +8,18 @@ const AnalyzePage = () => {
   const navigate = useNavigate();
 
   const handleImageUpload = async (event) => {
+    // 로그인 여부 체크
+    const userSession = sessionStorage.getItem('user');
+    if (!userSession) {
+      alert('이미지를 업로드하려면 먼저 로그인해주세요.');
+       navigate('/login', { state: { from: location.pathname } });
+      return;
+    }
+
     const file = event.target.files[0];
     if (!file) return;
 
-    const user = sessionStorage.getItem('user')
-      ? JSON.parse(sessionStorage.getItem('user'))
-      : { id: '', name: '' };
+    const user = JSON.parse(userSession);
 
     const formData = new FormData();
     formData.append('image', file);
@@ -24,7 +30,7 @@ const AnalyzePage = () => {
       const response = await fetch('http://localhost:5001/upload', {
         method: 'POST',
         body: formData,
-        credentials: 'include'  // ✅ 이거 꼭 있어야 해 (백에서 credentials: true 썼으니까)
+        credentials: 'include'
       });
 
       const result = await response.json();
@@ -40,7 +46,7 @@ const AnalyzePage = () => {
             image: imageUrl,
             fileName,
             isSample: false,
-            ocrText: '',         // ✅ OCR 사용 안함
+            ocrText: '',
             isSecondSample: fileName === 'sample_darkpattern2.png',
           },
         });
@@ -54,8 +60,8 @@ const AnalyzePage = () => {
   };
 
   const handleSampleImageUse = () => {
-    const sampleImage = 'http://localhost:5001/input_image/coupang2.png';
-    const sampleFileName = 'coupang2.png';
+    const sampleImage = 'http://localhost:5001/input_image/sample_image.png';
+    const sampleFileName = 'sample_image.png';
 
     setSelectedImage({
       image: sampleImage,
@@ -96,7 +102,7 @@ const AnalyzePage = () => {
         <div className="sample-box">
           <h4>샘플이미지</h4>
           <p>아래 이미지를 사용해 분석해보세요.</p>
-          <img src="http://localhost:5001/input_image/coupang2.png" alt="샘플 이미지" />
+          <img src="http://localhost:5001/input_image/sample_image.png" alt="샘플 이미지" />
           <button onClick={handleSampleImageUse}>사용하기 →</button>
         </div>
       </div>

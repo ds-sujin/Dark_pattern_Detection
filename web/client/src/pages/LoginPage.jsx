@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './LoginPage.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom'; // 추가
 import Navbar from '../components/Navbar';
 import { validateEmail, validatePassword } from '../utils/validation';
 
@@ -8,9 +8,10 @@ const LoginPage = () => {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const location = useLocation(); // 추가
+  const from = location.state?.from || '/'; // 이전 페이지가 없으면 메인으로
 
   const handleLogin = async () => {
-    // 클라이언트 측 유효성 검사
     if (!validateEmail(id)) {
       alert('유효한 이메일을 입력해주세요.');
       return;
@@ -32,8 +33,9 @@ const LoginPage = () => {
 
       if (data.success) {
         alert('로그인 성공!');
-        sessionStorage.setItem('user', JSON.stringify(data.user)); // 또는 localStorage.setItem(...)
-        navigate('/main');
+        sessionStorage.setItem('user', JSON.stringify(data.user));
+
+        navigate(from, { replace: true }); // 원래 페이지로 이동
       } else {
         alert('로그인 실패: ' + data.message);
       }

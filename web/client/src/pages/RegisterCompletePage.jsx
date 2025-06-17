@@ -1,23 +1,25 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import './RegisterCompletePage.css';
 import Navbar from '../components/Navbar';
 
 const RegisterCompletePage = () => {
-  const navigate = useNavigate();
-
   return (
     <>
       <Navbar />
-      <div style={{ textAlign: 'center', padding: '5rem 2rem' }}>
-        <h2>환영합니다!</h2>
-        <p>로그인을 통해 다양한 서비스를 이용하세요.</p>
-        <button onClick={() => navigate('/login')} style={{ marginRight: '1rem' }}>
-          로그인하러가기
-        </button>
-        <button onClick={() => navigate('/')}>메인화면으로 가기</button>
+      <div className="complete-container">
+        <img
+          src="/images/fireworks.png"
+          alt="축하 이미지"
+          className="celebration-img"
+        />
+        <h2>🎉 회원가입을 환영합니다!</h2>
+        <p>지금 바로 로그인하여 다크패턴 탐지 서비스를 이용해보세요.</p>
+        <a href="/login" className="login-button">로그인하러 가기</a>
       </div>
     </>
   );
 };
 
 export default RegisterCompletePage;
+
+
