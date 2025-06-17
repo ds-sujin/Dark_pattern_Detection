@@ -81,18 +81,37 @@ function AnalyzeResult() {
     setLoading(true);
   }, [currentIndex]);
 
-  const handleImageLoad = () => {
+
+  useEffect(() => {
+  const handleResize = () => {
     if (imageRef.current) {
       setImageSize({
         width: imageRef.current.offsetWidth,
         height: imageRef.current.offsetHeight,
       });
-      setNaturalSize({
-        width: imageRef.current.naturalWidth,
-        height: imageRef.current.naturalHeight,
-      });
     }
   };
+
+  window.addEventListener('resize', handleResize);
+
+  // 초기 실행
+  handleResize();
+
+  return () => window.removeEventListener('resize', handleResize);
+}, []);
+
+  const handleImageLoad = () => {
+  if (imageRef.current) {
+    setImageSize({
+      width: imageRef.current.offsetWidth,
+      height: imageRef.current.offsetHeight,
+    });
+    setNaturalSize({
+      width: imageRef.current.naturalWidth,
+      height: imageRef.current.naturalHeight,
+    });
+  }
+};
 
   const currentData = analysisData[currentIndex] ?? null;
 
@@ -250,14 +269,14 @@ function AnalyzeResult() {
                 </div>
               </div>
             </motion.div>
-          </div>
-
-          <motion.div className="subtype-card">
+            <motion.div className="subtype-card">
               <h4>다크패턴 세부유형</h4>
               <div className="subtype-contents-type">
                 <p><strong>{currentData.predicate}</strong></p>
               </div>
             </motion.div>
+          </div>
+
 
           <motion.div className="legal-card">
             <div className="tab-line-container">
