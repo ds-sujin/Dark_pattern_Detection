@@ -265,7 +265,7 @@ function AnalyzeResult() {
               <button className="upload-btn" onClick={() => navigate('/analyze')}>다른 이미지 분석하기</button>
             </div>
           </div>
-        )}``
+        )}
       </motion.div>
       <Footer />
     </div>
