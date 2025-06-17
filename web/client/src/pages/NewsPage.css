@@ -1,87 +1,198 @@
-.navbar {
-  position: sticky;          /* 상단 고정 */
-  top: 0;                    /* 뷰포트의 맨 위에 고정 */
-  z-index: 1000;             /* 다른 요소 위에 표시되도록 */
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 64px;                     /* 높이 증가 */
-  padding: 0 2rem;  
-  background-color: #ffffff;
-  border-bottom: 1px solid #E6E6E6;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04); /* 선택사항: 스크롤 시 그림자 효과 */
-}
+/* src/pages/NewsPage.css */
 
-/* 로고 */
-.gnb-logo-svg {
-  height: 18px;
-  object-fit: contain;
-  padding-right: 8rem;
-}
-
-/* 가운데 메뉴 */
-.navbar-menu {
-  display: flex;
-  flex: 2;
-  justify-content: center;
-  gap: 3rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-
-.navbar-menu a {
-  text-decoration: none;
-  color: #222;
-  font-weight: 500;
-  font-size: 0.95rem;
-  
-}
-
-/* li를 기준 잡기 */
-.navbar-menu li {
-  position: relative;
-}
-
-/* 기존 링크 밑줄 수정 */
-.navbar-menu li a::after {
-  content: '';
-  position: absolute;
-
-  /* 아래와 같이 위치 변경 */
-  left: 0;
-  right: 0;
-  bottom: -23px; /* ← a 아래가 아니라 navbar 아래로! */
-
-  height: 3px;
-  background-color: #00c8d7;
-
-  /* 밑줄 중앙 정렬 (선택사항) */
+.news-container {
+  max-width: 1200px;
   margin: 0 auto;
-
-  /* 애니메이션 */
-  width: 0%;
-  transition: width 0.3s ease;
+  padding-top: 4rem;
+  padding-bottom: 5rem;
+  font-family: 'Pretendard', sans-serif;
 }
 
-/* hover 시 밑줄 확장 */
-.navbar-menu li a:hover::after {
-  width: 100%;
+.news-header {
+  text-align: center;
+  margin-bottom: 4rem;
 }
 
-/* 오른쪽 버튼 */
-.navbar-login {
-  flex: 1;
+.news-header img {
+  width: 64px;
+  margin-bottom: 1rem;
+}
+
+.news-header h1 {
+  margin: 0.5rem 0;
+  font-size: 2.5rem;
+}
+
+.news-header p {
+  color: #4D4D4D;
+  font-weight: 400;
+  font-size: 1.125rem;
+}
+
+.news-toolbar {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  font-family: 'Pretendard', sans-serif;
 }
 
-.navbar-login .login-btn {
-  background-color: #26c6da;
-  color: white;
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  text-decoration: none;
+.news-toolbar p {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.news-toolbar-right {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.news-toolbar input {
+  padding: 0.85rem 1rem;
+  width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+
+.news-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);  /* 3등분 그리드 */
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.news-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* ★ 이게 핵심 */
+  border-radius: 20px; /* 이미지랑 같은 반지름 적용 */
+  cursor: pointer;
+}
+
+
+.news-card img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 20px;
+  transition: transform 0.4s ease; /* 확대 애니메이션 */
+}
+
+.news-card:hover img {
+  transform: scale(1.05); /* 이미지 확대 */
+  border-radius: 20px;
+}
+
+.news-card:hover .news-title {
+  color: #0BBBC5; /* 타이틀 색상 강조 */
+}
+
+
+.news-card-content {
+  margin-top: 0.5rem;
+}
+
+.news-company {
   font-size: 0.9rem;
+  font-weight: 400;
+  color: #808080;
+  margin-bottom: 0.25rem;
+}
+
+.news-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0.75rem 0;
+  transition: color 0.3s ease; /* 부드러운 색상 전환 */
+  
+  /* 🔽 두 줄까지 표시하고 이후는 ... 으로 생략 */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;       /* 최대 줄 수 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.news-date {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #808080;
+  margin-top: 1rem;
+}
+
+.news-list-item {
+  display: block;
+  border-top: 1px solid #eee;
+  padding: 1.5rem 0;
+  transition: background-color 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.news-list-item:hover .news-title {
+  color: #0BBBC5; /* 리스트형 타이틀 색상 변경 */
+}
+.news-summary {
+  font-size: 0.9rem;
+  color: #444;
+  line-height: 1.4;
+  max-height: 2.8em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.news-link {
+  color: #0066cc;
+  font-size: 0.85rem;
+}
+
+/*동영상*/
+.news-header-video {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  border-radius: 0; /* 모서리 둥글지 않게 */
+}
+
+.news-header-video-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.news-header-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* 딤드 효과 */
+  z-index: 1;
+}
+
+.news-header-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 2;
+  color: white;
+}
+
+.news-header-text h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.news-header-text p {
+  font-weight: 400;
+  font-size: 1.125rem;
+  color: #eee;
 }

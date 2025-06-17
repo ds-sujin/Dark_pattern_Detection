@@ -102,7 +102,7 @@ const AnalyzePage = () => {
         <div className="sample-box">
           <h4>샘플이미지</h4>
           <p>아래 이미지를 사용해 분석해보세요.</p>
-          <img src="http://localhost:5001/input_image/sample_image.png" alt="샘플 이미지" />
+          <img src="http://localhost:5001/input_image/sample_foodology.png" alt="샘플 이미지" />
           <button onClick={handleSampleImageUse}>사용하기 →</button>
         </div>
       </div>
