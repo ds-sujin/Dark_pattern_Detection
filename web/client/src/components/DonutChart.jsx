@@ -1,42 +1,58 @@
-// Donut.jsx
-import React from 'react';
-import { PieChart, Pie, Cell } from 'recharts';
+import React, { useEffect } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import './DonutChart.css';
 
-const Donut = ({ value = 0, label = '' }) => {
-  const data = [
-    { name: '확률', value: value },
-    { name: '나머지', value: 1 - value },
-  ];
+const DonutChart = ({ value, label }) => {
+  const radius = 90;
+  const circumference = 2 * Math.PI * radius;
+  const animatedValue = useMotionValue(0);
 
-  const COLORS = ['#0BBBC5', '#e8f8f9']; // 강조색 + 배경 대조색
+  // 스프링 애니메이션
+  const spring = useSpring(animatedValue, {
+    stiffness: 100,
+    damping: 15,
+    mass: 0.5,
+  });
+
+  // offset 계산
+  const dashOffset = useTransform(spring, latest => circumference * (1 - latest));
+  const percentText = useTransform(spring, latest => `${Math.round(latest * 100)}%`);
+
+  // value가 바뀔 때마다 애니메이션 트리거
+  useEffect(() => {
+    animatedValue.set(value);
+  }, [value]);
 
   return (
     <div className="donut-chart">
-      <PieChart width={220} height={220}>
-        <Pie
-          data={data}
-          cx={105}
-          cy={110}
-          innerRadius={70}
-          outerRadius={90}
-          startAngle={90}
-          endAngle={-270}
-          dataKey="value"
-          cornerRadius={2} // ⭕
-
-        >
-          {data.map((_, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-          ))}
-        </Pie>
-      </PieChart>
+      <svg width="220" height="220">
+        <circle
+          cx="110"
+          cy="110"
+          r={radius}
+          stroke="#eee"
+          strokeWidth="20"
+          fill="none"
+        />
+        <motion.circle
+          cx="110"
+          cy="110"
+          r={radius}
+          stroke="#0BBBC5"
+          strokeWidth="20"
+          fill="none"
+          strokeDasharray={circumference}
+          strokeDashoffset={dashOffset}
+          strokeLinecap="round"
+          transform="rotate(-90 110 110)"
+        />
+      </svg>
       <div className="donut-center">
-        <div className="percent">{Math.round(value * 100)}%</div>
+        <motion.div className="percent">{percentText}</motion.div>
         <div className="label">{label}</div>
       </div>
     </div>
   );
 };
 
-export default Donut;
+export default DonutChart;
