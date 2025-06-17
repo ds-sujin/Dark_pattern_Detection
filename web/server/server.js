@@ -7,6 +7,8 @@ const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const app = express();
+const caseRoutes = require('./routes/case');
+
 
 // ✅ 2. CORS 미들웨어 (반드시 app.use보다 먼저!)
 app.use(cors({
@@ -67,6 +69,8 @@ app.use('/predict', predictRoute);  // ✅ 여기에도 한 번만 등록
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // server/server.js 또는 app.js에 다음 코드가 있어야 함:
 app.use('/input_image', express.static(path.join(__dirname, 'input_image')));
+// 여기 경로를 /case로 설정
+app.use('/case', caseRoutes);
 
 // ✅ 7. 기본 API (회원가입/로그인)
 app.post('/api/register', async (req, res) => {
