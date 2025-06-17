@@ -1,9 +1,0 @@
-flask
-python-dotenv
-pymongo
-easyocr
-torch
-transformers
-joblib
-scikit-learn
-pandas
