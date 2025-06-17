@@ -1,24 +1,31 @@
-// server/routes/law.js
 const express = require('express');
 const router = express.Router();
-const Law = require('../db/law.js');
+const { connectLawCollection } = require('../db/law');
 
-// POST /law
 router.post('/', async (req, res) => {
   const { title } = req.body;
 
-  try {
-    const law = await Law.findOne({ title });
+  if (!title) {
+    return res.status(400).json({ message: '법률명(title)을 입력해주세요.' });
+  }
 
-    if (!law) {
-      return res.status(404).json({ error: 'Law not found' });
+  try {
+    const collection = await connectLawCollection();
+
+    const result = await collection.findOne(
+      { title: { $regex: title, $options: 'i' } },
+      { projection: { title: 1, url: 1, definition: 1, _id: 0 } }
+    );
+
+    if (!result) {
+      return res.status(404).json({ message: '해당 법률을 찾을 수 없습니다.' });
     }
 
-    res.json(law);
+    res.status(200).json(result);
   } catch (err) {
-    console.error('Error querying MongoDB:', err);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('law 검색 오류:', err);
+    res.status(500).json({ message: '서버 오류가 발생했습니다.' });
   }
 });
 
-module.exports = router;
+module.exports = router;  
