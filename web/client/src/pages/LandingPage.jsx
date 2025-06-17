@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -5,6 +6,7 @@ import './LandingPage.css';
 
 function LandingPage() {
   const navigate = useNavigate();
+
   const location = useLocation();
   const [loading, setLoading] = useState(true);
 
@@ -43,6 +45,7 @@ function LandingPage() {
     fetchPrediction();
   }, [navigate, location.state]);
 
+
   return (
     <>
       <Navbar />
@@ -59,11 +62,20 @@ function LandingPage() {
             <br />
             잠시만 기다려 주세요!
           </p>
+
           <div className="dot-loader">
             <span></span>
             <span></span>
             <span></span>
           </div>
+
+          {/* ✅ 결과 보기 버튼 */}
+          <button
+            className="result-button"
+            onClick={() => navigate('/analyze/result')}
+          >
+            결과 보기 →
+          </button>
         </div>
       </div>
     </>

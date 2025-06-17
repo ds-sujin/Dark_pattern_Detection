@@ -33,8 +33,10 @@ const newsRoutes = require('./routes/news');
 const quizRoutes = require('./routes/quiz');
 const predictRoute = require('./routes/predict');
 const lawRoute = require('./routes/law'); // ✅ law 라우트 추가
+const suggestRoute = require('./routes/suggest');
 const predictDetailRoute = require('./routes/predict_detail');
 app.use('/predict_detail', predictDetailRoute);
+
 // ✅ MongoDB 연결
 const client = new MongoClient(process.env.MONGODB_URL);
 let usersCollection;
@@ -68,6 +70,7 @@ app.use('/news', newsRoutes);
 app.use('/quiz', quizRoutes);
 app.use('/predict', predictRoute);
 app.use('/law', lawRoute); // ✅ 라우터 등록
+app.use('/suggest', suggestRoute); // ✅ POST /suggest
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/input_image', express.static(path.join(__dirname, 'input_image')));

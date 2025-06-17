@@ -266,4 +266,6 @@ useEffect(() => {
   );
 }
 
+
 export default AnalyzeResult;
+
