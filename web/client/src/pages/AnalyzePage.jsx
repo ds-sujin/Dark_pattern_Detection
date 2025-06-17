@@ -54,8 +54,8 @@ const AnalyzePage = () => {
   };
 
   const handleSampleImageUse = () => {
-    const sampleImage = 'http://localhost:5001/input_image/coupang2.png';
-    const sampleFileName = 'coupang2.png';
+    const sampleImage = 'http://localhost:5001/input_image/coupang_test.png';
+    const sampleFileName = 'coupang_test.png';
 
     setSelectedImage({
       image: sampleImage,
@@ -96,7 +96,7 @@ const AnalyzePage = () => {
         <div className="sample-box">
           <h4>샘플이미지</h4>
           <p>아래 이미지를 사용해 분석해보세요.</p>
-          <img src="http://localhost:5001/input_image/coupang2.png" alt="샘플 이미지" />
+          <img src="http://localhost:5001/input_image/coupang_test.png" alt="샘플 이미지" />
           <button onClick={handleSampleImageUse}>사용하기 →</button>
         </div>
       </div>
