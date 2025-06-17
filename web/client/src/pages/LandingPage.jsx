@@ -1,47 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import './LandingPage.css';
 
 function LandingPage() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchPrediction = async () => {
-      try {
-        const filename = location.state?.fileName;
-
-        if (!filename) {
-          alert('파일 이름이 없습니다.');
-          return;
-        }
-
-        // ✅ 백엔드에 filename 보내기
-        const response = await fetch('http://localhost:5005/predict', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ filename }),
-        });
-
-        if (!response.ok) throw new Error('서버 오류');
-
-        const result = await response.json();
-        console.log('✅ 예측 결과 도착:', result);
-
-        // ✅ 응답이 오면 페이지 이동만
-        navigate('/analyze/result');
-      } catch (error) {
-        console.error('❌ 예측 실패:', error);
-        alert('예측 중 오류가 발생했습니다.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPrediction();
-  }, [navigate, location.state]);
 
   return (
     <>
@@ -59,11 +22,20 @@ function LandingPage() {
             <br />
             잠시만 기다려 주세요!
           </p>
+
           <div className="dot-loader">
             <span></span>
             <span></span>
             <span></span>
           </div>
+
+          {/* ✅ 결과 보기 버튼 */}
+          <button
+            className="result-button"
+            onClick={() => navigate('/analyze/result')}
+          >
+            결과 보기 →
+          </button>
         </div>
       </div>
     </>
