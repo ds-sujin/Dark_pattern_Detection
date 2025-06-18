@@ -4,6 +4,54 @@
   --skeleton-highlight-color: #a7a7a7;
 }
 
+/* AnalyzeResult.css */
+.dimming-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* 전체를 어둡게 */
+  pointer-events: none;
+  mask-image: none; /* 자바스크립트에서 동적으로 설정 */
+  -webkit-mask-image: none;
+}
+
+/* 이미지 컨테이너 */
+.uploaded-image-wrapper {
+  position: relative;
+}
+
+/* 이미지 자체 */
+.uploaded-image {
+  width: 100%;
+  display: block;
+}
+
+/* 전체 어둡게 처리 (dimming) */
+.uploaded-image-wrapper {
+  position: relative;
+}
+
+.uploaded-image {
+  width: 100%;
+  display: block;
+}
+
+.highlight-box {
+  position: absolute;
+  border: 2px solid red;           /* 🔴 테두리만 강조 */
+  background-color: transparent;   /* ✅ 내부는 투명 */
+  z-index: 2;
+  pointer-events: none;
+  box-shadow: 0 0 4px red;         /* 선택: 빨간 glow 효과 */
+}
+.law-url, .case-url{
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: #a2a2a2
+}
+
 .react-loading-skeleton {
   height: 18px !important;
   margin-top: 0.5rem !important;

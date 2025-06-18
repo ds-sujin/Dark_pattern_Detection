@@ -1,3 +1,4 @@
+// AnalyzeResultPage.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import './AnalyzeResult.css';
 import DonutChart from '../components/DonutChart';
@@ -14,8 +15,7 @@ function LawCard({ law }) {
       <a href={law.url} className="law-title" target="_blank" rel="noreferrer">
         {law.title}
       </a>
-      <p className="law-definition"><strong>객정:</strong> {law.definition}</p>
-      <p className="law-excerpt"><strong>조합:</strong> {law.excerpt}</p>
+      <p className="law-definition"><strong>정의:</strong> {law.definition}</p>
       <span className="law-url">{law.url}</span>
     </li>
   );
@@ -27,7 +27,7 @@ function CaseCard({ item }) {
       <a href={item.url} className="case-title" target="_blank" rel="noreferrer">
         {item.title}
       </a>
-      <p className="case-analysis"><strong>분석:</strong> {item['Our analysis']}</p>
+    
       <p className="case-outcome"><strong>결과:</strong> {item.Outcome}</p>
       <span className="case-url">{item.url}</span>
     </li>
@@ -75,7 +75,7 @@ function AnalyzeResult() {
     fetchAnalysis();
   }, [filename]);
 
-  useEffect(() => {
+   useEffect(() => {
     setLoading(true);
   }, [currentIndex]);
 
@@ -111,32 +111,87 @@ function AnalyzeResult() {
   }
 };
 
-  const currentData = analysisData[currentIndex] ?? null;
+  //const currentData = analysisData[currentIndex] ?? null;
+
+  useEffect(() => {
+    const normalizeTitle = (str) =>
+      str.replace(/–|—/g, '-').replace(/\s+/g, ' ').trim();
+
+    const fetchLaws = async () => {
+      if (!currentData || !currentData.laws || !Array.isArray(currentData.laws)) return;
+
+      try {
+        const responses = await Promise.all(
+          currentData.laws.map(async (lawTitle) => {
+            const cleanTitle = normalizeTitle(lawTitle);
+
+            const res = await fetch('http://localhost:5001/law', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ title: cleanTitle })
+            });
+
+            if (res.ok) {
+              return await res.json();
+            } else {
+              console.warn(`❗ 관련 법령을 찾을 수 없음: ${cleanTitle}`);
+              return null;
+            }
+          })
+        );
+
+        const filtered = responses.filter(Boolean);
+        setRelatedLaws(filtered);
+      } catch (err) {
+        console.error('❌ 관련 법령 요청 실패:', err);
+        setRelatedLaws([]);
+      }
+    };
+  
+    fetchLaws();
+  }, [currentData]);
 
 
   useEffect(() => {
-    if (!currentData?.type) return;
-    fetch('http://localhost:5001/law', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: currentData.type }),
-    })
-      .then(res => res.ok ? res.json() : null)
-      .then(data => data ? setRelatedLaws([data]) : setRelatedLaws([]))
-      .catch(() => setRelatedLaws([]));
+    const normalizeTitle = (str) =>
+      str.replace(/–|—/g, '-').replace(/\s+/g, ' ').trim();
+
+    const fetchCases = async () => {
+      if (!currentData || !currentData.laws || !Array.isArray(currentData.laws)) return;
+  
+      try {
+        const responses = await Promise.all(
+          currentData.laws.map(async (lawTitle) => {
+            const cleanTitle = normalizeTitle(lawTitle);
+
+            const res = await fetch('http://localhost:5001/case', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ title: cleanTitle })
+            });
+
+            if (res.ok) {
+              return await res.json();  // ✅ 이건 배열
+            } else {
+              console.warn(`❗ 관련 사례 없음: ${cleanTitle}`);
+              return [];
+            }
+          })
+        );
+
+        const mergedCases = responses.flat(); // 배열 안 배열 → 1차원으로 합치기
+        setRelatedCases(mergedCases);
+      } catch (err) {
+        console.error('❌ 사례 검색 실패:', err);
+        setRelatedCases([]);
+      }
+    };
+  
+    fetchCases();
   }, [currentData]);
 
-  useEffect(() => {
-    if (!currentData?.type) return;
-    fetch('http://localhost:5001/case', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: currentData.type }),
-    })
-      .then(res => res.json())
-      .then(data => setRelatedCases(data))
-      .catch(() => setRelatedCases([]));
-  }, [currentData]);
 
   useEffect(() => {
     if (!currentData?.text) return;
@@ -168,34 +223,89 @@ function AnalyzeResult() {
 
   return (
     <div className="analyzeAll-page">
-      <Navbar />
       <motion.div className="analysis-page">
         <div className="left-column">
           <div className="image-scroll-container">
             <div className="image-card">
-              <div className="uploaded-image-wrapper">
-                <img
-                  ref={imageRef}
-                  src={imageSrc}
-                  alt="분석 이미지"
-                  className="uploaded-image"
-                  onLoad={() => {
-                    if (imageRef.current) {
-                      setImageSize({
-                        width: imageRef.current.offsetWidth,
-                        height: imageRef.current.offsetHeight,
-                      });
-                      setNaturalSize({
-                        width: imageRef.current.naturalWidth,
-                        height: imageRef.current.naturalHeight,
-                      });
-                    }
-                  }}
-                />
-                {hasResult && (
-                  <div className="highlight-box" style={{ ...scaledBox, position: 'absolute' }}></div>
-                )}
-              </div>
+            <div className="uploaded-image-wrapper" style={{ position: 'relative' }}>
+  <img
+    ref={imageRef}
+    src={imageSrc}
+    alt="분석 이미지"
+    className="uploaded-image"
+    onLoad={handleImageLoad}
+  />
+
+  {hasResult && (
+    <>
+      {/* 어두운 배경 오버레이 4조각 */}
+      <div
+        className="dim-top"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: `${y * scaleY}px`,
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          zIndex: 2,
+        }}
+      />
+      <div
+        className="dim-left"
+        style={{
+          position: 'absolute',
+          top: `${y * scaleY}px`,
+          left: 0,
+          width: `${x * scaleX}px`,
+          height: `${h * scaleY}px`,
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          zIndex: 2,
+        }}
+      />
+      <div
+        className="dim-right"
+        style={{
+          position: 'absolute',
+          top: `${y * scaleY}px`,
+          left: `${(x + w) * scaleX}px`,
+          right: 0,
+          height: `${h * scaleY}px`,
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          zIndex: 2,
+          width: '100%',
+        }}
+      />
+      <div
+        className="dim-bottom"
+        style={{
+          position: 'absolute',
+          top: `${(y + h) * scaleY}px`,
+          left: 0,
+          width: '100%',
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          zIndex: 2,
+          height: '100%',
+        }}
+      />
+
+      {/* 밝은 하이라이트 사각형 */}
+      <div
+        className="highlight-box"
+        style={{
+          position: 'absolute',
+          top: `${y * scaleY-2.0}px`,
+          left: `${x * scaleX-2.0}px`,
+          width: `${w * scaleX}px`,
+          height: `${h * scaleY}px`,
+          backgroundColor: 'transparent',
+          zIndex: 3,
+        }}
+      />
+    </>
+  )}
+</div>
             </div>
           </div>
 
@@ -217,7 +327,7 @@ function AnalyzeResult() {
                     <span className="ocr-label">OCR 신뢰도 : {Math.round(currentData.confidence)}%</span>
                   </div>
                   <div className="text-content">
-                    {loading ? <Skeleton count={3} height={18} /> : <p>{currentData.text}</p>}
+                    <p>{currentData.text}</p>
                   </div>
                 </motion.div>
 
@@ -257,11 +367,8 @@ function AnalyzeResult() {
                     <DonutChart value={currentData.prob * 0.01} label={currentData.type} />
                   </div>
                 </div>
-                <div className="donut-wrapper">
-                  <DonutChart value={currentData.prob * 0.01} label={currentData.type} />
-                </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
 
             <motion.div className="subtype-card">
               <h4>다크패턴 세부유형</h4>
@@ -269,8 +376,6 @@ function AnalyzeResult() {
                 <p><strong>{currentData.predicate}</strong></p>
               </div>
             </motion.div>
-          </div>
-
 
             <motion.div className="legal-card">
               <div className="tab-line-container">

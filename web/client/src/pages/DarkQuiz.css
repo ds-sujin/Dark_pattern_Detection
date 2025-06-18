@@ -109,7 +109,7 @@ level-img {
 }
 
 .quiz-image {
-  max-width: 100%;
+  max-width: 450px;
   height: auto;
   border-radius: 8px;
   margin-bottom: 1rem;
@@ -178,12 +178,6 @@ level-img {
   display: flex;
   justify-content: center;
   margin: 1rem 0;
-}
-
-.quiz-image {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
 }
 
 .quiz-options {
